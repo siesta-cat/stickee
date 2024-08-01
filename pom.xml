@@ -12,7 +12,7 @@
 	<artifactId>stickee</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>stickee</name>
-	<description>Stickee, a simple text storage application</description>
+	<description>Stickee is a simple and ephemeral text storage application</description>
 	<url/>
 	<licenses>
 		<license/>
