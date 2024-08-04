@@ -33,8 +33,7 @@ public class NoteServiceTest {
     @Test
     void shouldGetWhenExisting() {
         var note = NoteStubBuilder.create().withText("I should be get").build();
-        noteService.create(note);   
-
+        
         given(noteRepository.findByResourceLocator(note.getResourceLocator())).willReturn(Optional.of(note));
         var maybeNote = noteService.get(note.getResourceLocator());
 
