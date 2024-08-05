@@ -7,7 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Note {    
+public class Note {   
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -17,6 +18,8 @@ public class Note {
 
     @Column(nullable = false, unique = true)
     private String resourceLocator;
+
+    public Note() {}
     
     public Note(String text, String resourceLocator) {
         this.text = text;
