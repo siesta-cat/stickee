@@ -14,7 +14,7 @@ public class Note {
     @Column(nullable = false)
     private String text;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String resourceLocator;
     
     public Note(String text, String resourceLocator) {
