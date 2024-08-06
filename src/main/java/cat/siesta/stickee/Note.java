@@ -1,42 +1,49 @@
 package cat.siesta.stickee;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.annotations.UuidGenerator.Style;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
 public class Note {   
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @UuidGenerator(style = Style.RANDOM)
+    private UUID resourceLocator;
 
     @Column(nullable = false)
     private String text;
 
-    @Column(nullable = false, unique = true)
-    private String resourceLocator;
+    public Note() {
+        this.text = "";
+    }
 
-    public Note() {}
-    
-    public Note(String text, String resourceLocator) {
+    public Note(String text) {
         this.text = text;
+    }
+
+    public Note(UUID resourceLocator, String text) {
         this.resourceLocator = resourceLocator;
+        this.text = text;
     }
 
     public String getText() {
         return text;
     }
 
-    public String getResourceLocator() {
-        return resourceLocator;
+    public Optional<UUID> getResourceLocator() {
+        return Optional.ofNullable(this.resourceLocator);
     }
 
     @Override
     public String toString() {
-        return "Note [id=" + id + ", text=" + text + ", resourceLocator=" + resourceLocator + "]";
+        return "Note [text=" + text + ", resourceLocator=" + resourceLocator + "]";
     }
 
     @Override

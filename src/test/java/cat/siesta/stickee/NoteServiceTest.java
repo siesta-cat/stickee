@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +33,14 @@ public class NoteServiceTest {
 
     @Test
     void shouldGetWhenExisting() {
-        var note = NoteStubBuilder.create().withText("I should be get").build();
+        var resourceLocator = UUID.randomUUID();
+        var note = NoteStubBuilder.create()
+            .withText("I should be get")
+            .withResourceLocator(resourceLocator)
+            .build();
         
-        given(noteRepository.findByResourceLocator(note.getResourceLocator())).willReturn(Optional.of(note));
-        var maybeNote = noteService.get(note.getResourceLocator());
+        given(noteRepository.findByResourceLocator(resourceLocator)).willReturn(Optional.of(note));
+        var maybeNote = noteService.get(resourceLocator);
 
         assertTrue(maybeNote.isPresent());
         assertEquals(note, maybeNote.get());        
@@ -43,7 +48,7 @@ public class NoteServiceTest {
 
     @Test
     void shouldGetEmptyWhenAbsent() {
-        String resourceLocator = "f0f0f0";
+        var resourceLocator = UUID.randomUUID();
 
         given(noteRepository.findByResourceLocator(resourceLocator)).willReturn(Optional.empty());
         var maybeNote = noteService.get(resourceLocator);

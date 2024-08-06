@@ -1,12 +1,15 @@
 package cat.siesta.stickee;
 
+import java.util.Optional;
+import java.util.UUID;
+
 public class NoteStubBuilder {
     private String text;
-    private String resourceLocator;
+    private Optional<UUID> resourceLocator;
 
     private NoteStubBuilder() {
         text = "This is a stub note.\n Haha.\n ¡Únicod€!";
-        resourceLocator = "4bf10c2";
+        resourceLocator = Optional.empty();
     }
 
     public static NoteStubBuilder create() {
@@ -18,12 +21,14 @@ public class NoteStubBuilder {
         return this;
     }
 
-    public NoteStubBuilder withResourceLocator(String resourceLocator) {
-        this.resourceLocator = resourceLocator;
+    public NoteStubBuilder withResourceLocator(UUID resourceLocator) {
+        this.resourceLocator = Optional.of(resourceLocator);
         return this;
     }
 
     public Note build() {
-        return new Note(text, resourceLocator);
+        return this.resourceLocator
+            .map(resourceLocator -> new Note(resourceLocator, text))
+            .orElse(new Note(text));
     }
 }

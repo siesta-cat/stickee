@@ -1,24 +1,31 @@
 package cat.siesta.stickee.integration;
 
+import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.equalTo;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.http.HttpStatus;
 
+import cat.siesta.stickee.Note;
+import cat.siesta.stickee.NoteService;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 
 @SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-@Sql(statements = {
-    "INSERT INTO note (resource_locator, text) VALUES ('f92', 'Hello world!')",
-    "INSERT INTO note (resource_locator, text) VALUES ('3c2', 'Bye!')"
-}, executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
 public class NoteControllerIntegrationTest {
+
+    private Note noteHello = new Note("Hello world!");
+    private Note noteBye = new Note("Bye!");
+
+    @Autowired
+    NoteService noteService;
 
     @BeforeAll
     static void registerParser() {
@@ -27,18 +34,38 @@ public class NoteControllerIntegrationTest {
 
     @Test
     void shouldGetWhenExisting() {
-        when().get("/f92").then().assertThat()
-            .statusCode(200)
-            .body(equalTo("Hello world!"));
+        UUID noteHelloUuid = noteService.create(noteHello).getResourceLocator().orElseThrow();
+        UUID noteByeUuid = noteService.create(noteBye).getResourceLocator().orElseThrow();
 
-        when().get("/3c2").then().assertThat()
-            .statusCode(200)
-            .body(equalTo("Bye!"));
+        when().get("/" + noteHelloUuid).then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body(equalTo("Hello world!"));
+
+        when().get("/" + noteByeUuid).then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body(equalTo("Bye!"));
     }
 
     @Test
     void shouldGetNotFoundWhenNotExisting() {
-        when().get("/000").then().assertThat()
-            .statusCode(404);
+        when().get("/" + UUID.randomUUID()).then().assertThat()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void shouldCreateAndGet() {
+        var text = "Posting!";
+
+        var response = given()
+                .param("text", text)
+                .post("/create").then().assertThat()
+                .statusCode(HttpStatus.FOUND.value())
+                .extract();
+
+        var location = response.header("Location");
+
+        when().get(location).then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body(equalTo(text));
     }
 }
