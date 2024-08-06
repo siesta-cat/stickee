@@ -25,7 +25,7 @@ public class NoteServiceTest {
     @Test
     void shouldSave() {
         var note = NoteStubBuilder.create().build();
-        
+
         noteService.create(note);
 
         verify(noteRepository).save(note);
@@ -35,15 +35,15 @@ public class NoteServiceTest {
     void shouldGetWhenExisting() {
         var resourceLocator = UUID.randomUUID();
         var note = NoteStubBuilder.create()
-            .withText("I should be get")
-            .withResourceLocator(resourceLocator)
-            .build();
-        
+                .withText("I should be get")
+                .withResourceLocator(resourceLocator)
+                .build();
+
         given(noteRepository.findByResourceLocator(resourceLocator)).willReturn(Optional.of(note));
         var maybeNote = noteService.get(resourceLocator);
 
         assertTrue(maybeNote.isPresent());
-        assertEquals(note, maybeNote.get());        
+        assertEquals(note, maybeNote.get());
     }
 
     @Test

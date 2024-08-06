@@ -11,7 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class Note {   
+public class Note {
 
     @Id
     @UuidGenerator(style = Style.RANDOM)
@@ -77,5 +77,4 @@ public class Note {
         return true;
     }
 
-    
 }

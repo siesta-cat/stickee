@@ -28,7 +28,7 @@ public class NoteStubBuilder {
 
     public Note build() {
         return this.resourceLocator
-            .map(resourceLocator -> new Note(resourceLocator, text))
-            .orElse(new Note(text));
+                .map(resourceLocator -> new Note(resourceLocator, text))
+                .orElse(new Note(text));
     }
 }
