@@ -34,14 +34,14 @@ public class NoteControllerIntegrationTest {
 
     @Test
     void shouldGetWhenExisting() {
-        UUID noteHelloUuid = noteService.create(noteHello).getResourceLocator().orElseThrow();
-        UUID noteByeUuid = noteService.create(noteBye).getResourceLocator().orElseThrow();
+        String noteHelloId = noteService.create(noteHello).getResourceLocator().orElseThrow();
+        String noteByeId = noteService.create(noteBye).getResourceLocator().orElseThrow();
 
-        when().get("/" + noteHelloUuid).then().assertThat()
+        when().get("/" + noteHelloId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("Hello world!"));
 
-        when().get("/" + noteByeUuid).then().assertThat()
+        when().get("/" + noteByeId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("Bye!"));
     }

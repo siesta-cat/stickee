@@ -1,11 +1,10 @@
 package cat.siesta.stickee;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public class NoteStubBuilder {
     private String text;
-    private Optional<UUID> resourceLocator;
+    private Optional<String> resourceLocator;
 
     private NoteStubBuilder() {
         text = "This is a stub note.\n Haha.\n ¡Únicod€!";
@@ -21,7 +20,7 @@ public class NoteStubBuilder {
         return this;
     }
 
-    public NoteStubBuilder withResourceLocator(UUID resourceLocator) {
+    public NoteStubBuilder withResourceLocator(String resourceLocator) {
         this.resourceLocator = Optional.of(resourceLocator);
         return this;
     }

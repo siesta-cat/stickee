@@ -1,7 +1,5 @@
 package cat.siesta.stickee;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +18,7 @@ public class NoteController {
 
     @GetMapping("/{resource-locator}")
     public @ResponseBody String getNote(@PathVariable("resource-locator") String resourceLocator) {
-        var resourceLocatorUuid = UUID.fromString(resourceLocator);
-        var maybeNote = noteService.get(resourceLocatorUuid);
+        var maybeNote = noteService.get(resourceLocator);
         return maybeNote.map(Note::getText).orElseThrow(NoteNotFoundException::new);
     }
 

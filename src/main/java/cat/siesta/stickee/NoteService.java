@@ -1,7 +1,6 @@
 package cat.siesta.stickee;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ public class NoteService {
         return noteRepository.save(note);
     }
 
-    public Optional<Note> get(UUID resourceLocator) {
+    public Optional<Note> get(String resourceLocator) {
         return noteRepository.findByResourceLocator(resourceLocator);
     }
 }
