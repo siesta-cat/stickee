@@ -20,6 +20,9 @@ public class Note {
     @Column(nullable = false)
     private String text;
 
+    @Column(nullable = false)
+    private LocalDateTime creationTimestamp = LocalDateTime.now();
+
     public Note() {
         this.text = "";
     }
