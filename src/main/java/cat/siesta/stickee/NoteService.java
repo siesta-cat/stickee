@@ -9,10 +9,15 @@ import org.springframework.stereotype.Service;
 public class NoteService {
 
     @Autowired
+    private NoteIdGeneratorService idGeneratorService;
+
+    @Autowired
     private NoteRepository noteRepository;
 
     public Note create(Note note) {
-        return noteRepository.save(note);
+        var resourceLocator = idGeneratorService.generate();
+        var noteWithResourceLocator = new Note(resourceLocator, note.getText());
+        return noteRepository.save(noteWithResourceLocator);
     }
 
     public Optional<Note> get(String resourceLocator) {

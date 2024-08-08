@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface NoteRepository extends JpaRepository<Note, Long> {
     public Optional<Note> findByResourceLocator(String resourceLocator);
+    public boolean existsByResourceLocator(String resourceLocator);
 }

@@ -13,7 +13,6 @@ import jakarta.persistence.Id;
 public class Note {
 
     @Id
-    @UuidGenerator
     private String resourceLocator;
 
     @Column(nullable = false)
