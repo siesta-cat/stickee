@@ -3,8 +3,6 @@ package cat.siesta.stickee;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import org.hibernate.annotations.UuidGenerator;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
