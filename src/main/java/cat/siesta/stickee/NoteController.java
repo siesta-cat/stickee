@@ -1,7 +1,6 @@
 package cat.siesta.stickee;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +26,9 @@ public class NoteController {
     @PostMapping("/create")
     public ResponseEntity<String> postNote(@RequestParam("text") String text) {
         var resourceLocator = noteService.create(new Note(text)).getResourceLocator().orElseThrow().toString();
-        var headers = new HttpHeaders();
-        headers.add("Location", "/" + resourceLocator);
-        return new ResponseEntity<>(headers, HttpStatus.FOUND);
+        return ResponseEntity
+            .status(HttpStatus.FOUND)
+            .header("Location", "/" + resourceLocator)
+            .build();
     }
 }
