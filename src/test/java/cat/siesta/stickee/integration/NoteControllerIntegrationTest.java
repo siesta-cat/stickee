@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ public class NoteControllerIntegrationTest {
     private Note noteHello = new Note("Hello world!");
     private Note noteBye = new Note("Bye!");
 
+    @Value("${stickee.notes-base-path}")
+    private String notesBasePath;
+
     @Autowired
     NoteService noteService;
 
@@ -37,18 +41,18 @@ public class NoteControllerIntegrationTest {
         String noteHelloId = noteService.create(noteHello).getResourceLocator().orElseThrow();
         String noteByeId = noteService.create(noteBye).getResourceLocator().orElseThrow();
 
-        when().get("/" + noteHelloId).then().assertThat()
+        when().get(notesBasePath + "/" + noteHelloId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("Hello world!"));
 
-        when().get("/" + noteByeId).then().assertThat()
+        when().get(notesBasePath + "/" + noteByeId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("Bye!"));
     }
 
     @Test
     void shouldGetNotFoundWhenNotExisting() {
-        when().get("/" + UUID.randomUUID()).then().assertThat()
+        when().get(notesBasePath + "/" + UUID.randomUUID()).then().assertThat()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
@@ -58,7 +62,7 @@ public class NoteControllerIntegrationTest {
 
         var response = given()
                 .param("text", text)
-                .post("/create").then().assertThat()
+                .post(notesBasePath + "/create").then().assertThat()
                 .statusCode(HttpStatus.FOUND.value())
                 .extract();
 
