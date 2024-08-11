@@ -29,7 +29,7 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
-		<node.version>20</node.version>
+		<node.version>v20.16.0</node.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -79,6 +79,7 @@
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.5.0</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -98,7 +99,7 @@
 						<goals>
 							<goal>install-node-and-npm</goal>
 						</goals>
-						<phase>generate-css</phase>
+						<phase>generate-resources</phase>
 						<configuration>
 							<nodeVersion>${node.version}</nodeVersion>
 						</configuration>
@@ -108,7 +109,7 @@
 						<goals>
 							<goal>npm</goal>
 						</goals>
-						<phase>generate-css</phase>
+						<phase>generate-resources</phase>
 						<configuration>
 							<arguments>install</arguments>
 						</configuration>
@@ -118,7 +119,7 @@
 						<goals>
 							<goal>npm</goal>
 						</goals>
-						<phase>generate-css</phase>
+						<phase>generate-resources</phase>
 						<configuration>
 							<arguments>run build</arguments>
 						</configuration>
