@@ -1,4 +1,4 @@
-package cat.siesta.stickee;
+package cat.siesta.stickee.persistence;
 
 import java.util.Optional;
 

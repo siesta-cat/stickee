@@ -14,8 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.HttpStatus;
 
-import cat.siesta.stickee.Note;
-import cat.siesta.stickee.NoteService;
+import cat.siesta.stickee.persistence.Note;
+import cat.siesta.stickee.service.NoteService;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 

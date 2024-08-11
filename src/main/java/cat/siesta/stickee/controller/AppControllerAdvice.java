@@ -1,4 +1,4 @@
-package cat.siesta.stickee;
+package cat.siesta.stickee.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

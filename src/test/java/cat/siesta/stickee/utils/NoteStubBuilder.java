@@ -1,6 +1,8 @@
-package cat.siesta.stickee;
+package cat.siesta.stickee.utils;
 
 import java.util.Optional;
+
+import cat.siesta.stickee.persistence.Note;
 
 public class NoteStubBuilder {
     private String text;

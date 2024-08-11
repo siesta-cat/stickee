@@ -1,10 +1,12 @@
-package cat.siesta.stickee;
+package cat.siesta.stickee.service;
 
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import cat.siesta.stickee.persistence.NoteRepository;
 
 @Service
 public class NoteIdGeneratorService {

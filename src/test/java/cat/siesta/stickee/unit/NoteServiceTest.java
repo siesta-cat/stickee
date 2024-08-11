@@ -1,4 +1,4 @@
-package cat.siesta.stickee;
+package cat.siesta.stickee.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,6 +17,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+
+import cat.siesta.stickee.persistence.NoteRepository;
+import cat.siesta.stickee.service.NoteIdGeneratorService;
+import cat.siesta.stickee.service.NoteService;
+import cat.siesta.stickee.utils.NoteStubBuilder;
 
 @SpringBootTest
 public class NoteServiceTest {
