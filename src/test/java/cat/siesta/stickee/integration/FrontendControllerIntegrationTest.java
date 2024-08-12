@@ -18,4 +18,11 @@ public class FrontendControllerIntegrationTest {
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.HTML);
     }
+
+    @Test
+    public void testCSS() throws Exception {
+        when().get("/main.css").then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .contentType("text/css");
+    }
 }
