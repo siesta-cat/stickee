@@ -20,7 +20,7 @@ public class FrontendControllerIntegrationTest {
     }
 
     @Test
-    public void testCSS() throws Exception {
+    public void testCss() throws Exception {
         when().get("/main.css").then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/css");
