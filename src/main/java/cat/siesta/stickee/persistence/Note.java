@@ -6,6 +6,7 @@ import java.util.Optional;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -20,6 +21,7 @@ public class Note {
     private String resourceLocator;
 
     @Column(nullable = false)
+    @Lob
     private String text;
 
     @Column(nullable = false)
