@@ -19,7 +19,7 @@ import cat.siesta.stickee.service.NoteService;
 @RequestMapping("${stickee.notes-base-path}")
 public class NoteController {
 
-    @Value("${stickee.notes-base-path}")
+    @Value("/${stickee.notes-base-path}")
     private String notesBasePath;
 
     @Autowired
