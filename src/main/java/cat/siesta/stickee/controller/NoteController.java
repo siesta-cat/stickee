@@ -26,10 +26,14 @@ public class NoteController {
     private NoteService noteService;
 
     @GetMapping("/{resource-locator}")
-    public String getNote(@PathVariable("resource-locator") String resourceLocator) {
+    public ResponseEntity<String> getNote(@PathVariable("resource-locator") String resourceLocator) {
         var maybeNote = noteService.get(resourceLocator);
-        return maybeNote.map(Note::getText).orElseThrow(() ->
-            new ResponseStatusException(HttpStatus.NOT_FOUND, "note not found"));
+        return maybeNote.map(note ->
+            ResponseEntity
+                .status(HttpStatus.OK)
+                .header("Content-Type", "text/plain")
+                .body(note.getText()))
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "note not found"));
     }
 
     @PostMapping("/create")

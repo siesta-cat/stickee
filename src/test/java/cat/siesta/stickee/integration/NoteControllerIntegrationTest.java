@@ -24,6 +24,8 @@ public class NoteControllerIntegrationTest {
 
     private Note noteHello = new Note("Hello world!");
     private Note noteBye = new Note("Bye!");
+    private Note noteHtml = new Note("<b>Bold</b>");
+    private Note noteJson = new Note("{ \"text\": \"Hello\"}");
 
     @Value("${stickee.notes-base-path}")
     private String notesBasePath;
@@ -43,11 +45,29 @@ public class NoteControllerIntegrationTest {
 
         when().get(notesBasePath + "/" + noteHelloId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body(equalTo("Hello world!"));
+                .body(equalTo("Hello world!"))
+                .contentType("text/plain");
 
         when().get(notesBasePath + "/" + noteByeId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body(equalTo("Bye!"));
+                .body(equalTo("Bye!"))
+                .contentType("text/plain");
+    }
+
+    @Test
+    void shouldAlwaysReturnPlainText() {
+        String noteHtmlId = noteService.create(noteHtml).getResourceLocator().orElseThrow();
+        String noteJsonId = noteService.create(noteJson).getResourceLocator().orElseThrow();
+
+        given().header("Accept", "text/html")
+            .when().get(notesBasePath + "/" + noteHtmlId).then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .contentType("text/plain");
+        
+        given().header("Accept", "application/json")
+            .when().get(notesBasePath + "/" + noteJsonId).then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .contentType("text/plain");
     }
 
     @Test
