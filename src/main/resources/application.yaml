@@ -6,5 +6,3 @@ spring:
 server:
     error:
         include-stacktrace: never
-stickee:
-    notes-base-path: notes

@@ -7,12 +7,12 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
+import cat.siesta.stickee.config.StickeeConfiguration;
 import cat.siesta.stickee.persistence.Note;
 import cat.siesta.stickee.service.NoteService;
 import io.restassured.RestAssured;
@@ -27,8 +27,8 @@ public class NoteControllerIntegrationTest {
     private Note noteHtml = new Note("<b>Bold</b>");
     private Note noteJson = new Note("{ \"text\": \"Hello\" }");
 
-    @Value("${stickee.notes-base-path}")
-    private String notesBasePath;
+    @Autowired
+    StickeeConfiguration stickeeConfiguration;
 
     @Autowired
     NoteService noteService;
@@ -47,12 +47,12 @@ public class NoteControllerIntegrationTest {
         String noteHelloId = noteService.create(noteHello).getId().orElseThrow();
         String noteByeId = noteService.create(noteBye).getId().orElseThrow();
 
-        given().get(notesBasePath + "/" + noteHelloId).then().assertThat()
+        given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteHelloId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("Hello world!"))
                 .contentType("text/plain");
 
-        given().get(notesBasePath + "/" + noteByeId).then().assertThat()
+        given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteByeId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("Bye!"))
                 .contentType("text/plain");
@@ -64,19 +64,19 @@ public class NoteControllerIntegrationTest {
         String noteJsonId = noteService.create(noteJson).getId().orElseThrow();
 
         given().header("Accept", "text/html")
-            .given().get(notesBasePath + "/" + noteHtmlId).then().assertThat()
+            .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteHtmlId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/plain");
         
         given().header("Accept", "application/json")
-            .given().get(notesBasePath + "/" + noteJsonId).then().assertThat()
+            .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteJsonId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/plain");
     }
 
     @Test
     void shouldGetNotFoundWhenNotExisting() {
-        given().get(notesBasePath + "/" + UUID.randomUUID()).then().assertThat()
+        given().get(stickeeConfiguration.getNotesBasePath() + "/" + UUID.randomUUID()).then().assertThat()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
@@ -86,7 +86,7 @@ public class NoteControllerIntegrationTest {
 
         var response = given()
                 .param("text", text)
-                .post(notesBasePath + "/create").then().assertThat()
+                .post(stickeeConfiguration.getNotesBasePath() + "/create").then().assertThat()
                 .statusCode(HttpStatus.FOUND.value())
                 .extract();
 
