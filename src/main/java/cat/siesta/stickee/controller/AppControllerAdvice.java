@@ -17,6 +17,7 @@ public class AppControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handle(Exception e) {
+        e.printStackTrace();
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body("internal server error");
