@@ -18,12 +18,12 @@ public class NoteService {
     private NoteRepository noteRepository;
 
     public Note create(Note note) {
-        var resourceLocator = idGeneratorService.generate();
-        var noteWithResourceLocator = new Note(resourceLocator, note.getText());
-        return noteRepository.save(noteWithResourceLocator);
+        var id = idGeneratorService.generate();
+        var noteWithId = new Note(id, note.getText());
+        return noteRepository.save(noteWithId);
     }
 
-    public Optional<Note> get(String resourceLocator) {
-        return noteRepository.findByResourceLocator(resourceLocator);
+    public Optional<Note> get(String id) {
+        return noteRepository.findById(id);
     }
 }

@@ -18,7 +18,7 @@ import lombok.ToString;
 public class Note {
 
     @Id
-    private String resourceLocator;
+    private String id;
 
     @Column(nullable = false)
     @Lob
@@ -35,12 +35,12 @@ public class Note {
         this.text = text;
     }
 
-    public Note(String resourceLocator, String text) {
-        this.resourceLocator = resourceLocator;
+    public Note(String id, String text) {
+        this.id = id;
         this.text = text;
     }
 
-    public Optional<String> getResourceLocator() {
-        return Optional.ofNullable(this.resourceLocator);
+    public Optional<String> getId() {
+        return Optional.ofNullable(this.id);
     }
 }

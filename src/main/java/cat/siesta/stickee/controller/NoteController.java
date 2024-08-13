@@ -25,9 +25,9 @@ public class NoteController {
     @Autowired
     private NoteService noteService;
 
-    @GetMapping("/{resource-locator}")
-    public ResponseEntity<String> getNote(@PathVariable("resource-locator") String resourceLocator) {
-        var maybeNote = noteService.get(resourceLocator);
+    @GetMapping("/{id}")
+    public ResponseEntity<String> getNote(@PathVariable("id") String id) {
+        var maybeNote = noteService.get(id);
         return maybeNote.map(note ->
             ResponseEntity
                 .status(HttpStatus.OK)
@@ -38,10 +38,10 @@ public class NoteController {
 
     @PostMapping("/create")
     public ResponseEntity<String> postNote(@RequestParam("text") String text) {
-        var resourceLocator = noteService.create(new Note(text)).getResourceLocator().orElseThrow().toString();
+        var id = noteService.create(new Note(text)).getId().orElseThrow().toString();
         return ResponseEntity
             .status(HttpStatus.FOUND)
-            .header("Location", notesBasePath + "/" + resourceLocator)
+            .header("Location", notesBasePath + "/" + id)
             .build();
     }
 }

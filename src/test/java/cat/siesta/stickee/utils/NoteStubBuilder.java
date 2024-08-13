@@ -6,11 +6,11 @@ import cat.siesta.stickee.persistence.Note;
 
 public class NoteStubBuilder {
     private String text;
-    private Optional<String> resourceLocator;
+    private Optional<String> id;
 
     private NoteStubBuilder() {
         text = "This is a stub note.\n Haha.\n ¡Únicod€!";
-        resourceLocator = Optional.empty();
+        id = Optional.empty();
     }
 
     public static NoteStubBuilder create() {
@@ -22,14 +22,14 @@ public class NoteStubBuilder {
         return this;
     }
 
-    public NoteStubBuilder withResourceLocator(String resourceLocator) {
-        this.resourceLocator = Optional.of(resourceLocator);
+    public NoteStubBuilder withId(String id) {
+        this.id = Optional.of(id);
         return this;
     }
 
     public Note build() {
-        return this.resourceLocator
-                .map(resourceLocator -> new Note(resourceLocator, text))
+        return this.id
+                .map(id -> new Note(id, text))
                 .orElse(new Note(text));
     }
 }

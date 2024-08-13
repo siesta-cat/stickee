@@ -47,14 +47,14 @@ public class NoteServiceTest {
 
     @Test
     void shouldGetWhenExisting() {
-        var resourceLocator = "1a2";
+        var id = "1a2";
         var note = NoteStubBuilder.create()
                 .withText("I should be get")
-                .withResourceLocator(resourceLocator)
+                .withId(id)
                 .build();
 
-        given(noteRepository.findByResourceLocator(resourceLocator)).willReturn(Optional.of(note));
-        var maybeNote = noteService.get(resourceLocator);
+        given(noteRepository.findById(id)).willReturn(Optional.of(note));
+        var maybeNote = noteService.get(id);
 
         assertTrue(maybeNote.isPresent());
         assertEquals(note, maybeNote.get());
@@ -62,10 +62,10 @@ public class NoteServiceTest {
 
     @Test
     void shouldGetEmptyWhenAbsent() {
-        var resourceLocator = "1v4";
+        var id = "1v4";
 
-        given(noteRepository.findByResourceLocator(resourceLocator)).willReturn(Optional.empty());
-        var maybeNote = noteService.get(resourceLocator);
+        given(noteRepository.findById(id)).willReturn(Optional.empty());
+        var maybeNote = noteService.get(id);
 
         assertTrue(maybeNote.isEmpty());
     }
@@ -74,18 +74,18 @@ public class NoteServiceTest {
     void shouldRegenerateNewIdOnCollision() {
         var noteToInsert = NoteStubBuilder.create().build();
 
-        given(noteRepository.existsByResourceLocator(anyString()))
+        given(noteRepository.existsById(anyString()))
             .willReturn(true).willReturn(false);
         noteService.create(noteToInsert);
         
-        verify(noteRepository, times(2)).existsByResourceLocator(anyString());
+        verify(noteRepository, times(2)).existsById(anyString());
         verify(noteRepository).save(any());
     }
 
     @Test
     void IdsHaveDifferentAlphanumericValues() {
         var numberOfIdsToGenerate = 50;
-        given(noteRepository.existsByResourceLocator(anyString())).willReturn(false);
+        given(noteRepository.existsById(anyString())).willReturn(false);
         
         var distinctGeneratedIds = IntStream.range(0, numberOfIdsToGenerate)
             .mapToObj(i -> generatorService.generate())

@@ -44,8 +44,8 @@ public class NoteControllerIntegrationTest {
 
     @Test
     void shouldGetWhenExisting() {
-        String noteHelloId = noteService.create(noteHello).getResourceLocator().orElseThrow();
-        String noteByeId = noteService.create(noteBye).getResourceLocator().orElseThrow();
+        String noteHelloId = noteService.create(noteHello).getId().orElseThrow();
+        String noteByeId = noteService.create(noteBye).getId().orElseThrow();
 
         given().get(notesBasePath + "/" + noteHelloId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
@@ -60,8 +60,8 @@ public class NoteControllerIntegrationTest {
 
     @Test
     void shouldAlwaysReturnPlainText() {
-        String noteHtmlId = noteService.create(noteHtml).getResourceLocator().orElseThrow();
-        String noteJsonId = noteService.create(noteJson).getResourceLocator().orElseThrow();
+        String noteHtmlId = noteService.create(noteHtml).getId().orElseThrow();
+        String noteJsonId = noteService.create(noteJson).getId().orElseThrow();
 
         given().header("Accept", "text/html")
             .given().get(notesBasePath + "/" + noteHtmlId).then().assertThat()
