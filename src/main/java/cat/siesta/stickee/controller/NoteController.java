@@ -41,7 +41,7 @@ public class NoteController {
         var id = noteService.create(new Note(text)).getId().orElseThrow().toString();
         return ResponseEntity
             .status(HttpStatus.FOUND)
-            .header("Location", stickeeConfiguration.getNotesBasePath() + "/" + id)
+            .header("Location", "/" + stickeeConfiguration.getNotesBasePath() + "/" + id)
             .build();
     }
 }

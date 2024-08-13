@@ -14,7 +14,7 @@
     </header>
     <section class="text-center h-full">
       <p class="m-4">A simple and ephemeral text storage application</p>
-      <form action="/notes/create" method="post" class="mx-4 flex flex-col items-center">
+      <form th:action="@{|/${notesBasePath}/create|}" method="post" class="mx-4 flex flex-col items-center">
         <textarea name="text" rows="10" class="p-1 w-full lg:w-2/3 outline-none transition ease-in-out border-2 rounded-xl border-gray-400 hover:border-primary-400 focus:border-primary-400"></textarea>
         <button type="submit" class="m-2 p-2 transition ease-in-out rounded-xl bg-primary-200 hover:bg-primary-400">Create</button>
       </form>
