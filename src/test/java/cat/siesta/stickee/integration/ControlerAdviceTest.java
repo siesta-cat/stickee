@@ -13,6 +13,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 import cat.siesta.stickee.service.NoteService;
+import io.restassured.RestAssured;
+import jakarta.annotation.PostConstruct;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ControlerAdviceTest {
@@ -24,13 +26,18 @@ public class ControlerAdviceTest {
     NoteService noteService;
 
     @LocalServerPort
-    int port;
+    Integer port;
+
+    @PostConstruct
+    void setUp() {
+        RestAssured.port = port;
+    }
 
     @Test
     public void testUnhandledException() throws Exception {
         given(noteService.get(any())).willThrow(RuntimeException.class);
 
-        given().port(port).get(notesBasePath + "/" + "awjendkewjn").then().assertThat()
+        given().get(notesBasePath + "/" + "awjendkewjn").then().assertThat()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 }

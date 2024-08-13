@@ -6,20 +6,21 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.util.UUID;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 import cat.siesta.stickee.persistence.Note;
 import cat.siesta.stickee.service.NoteService;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
+import jakarta.annotation.PostConstruct;
 
-@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class NoteControllerIntegrationTest {
 
     private Note noteHello = new Note("Hello world!");
@@ -33,8 +34,12 @@ public class NoteControllerIntegrationTest {
     @Autowired
     NoteService noteService;
 
-    @BeforeAll
-    static void registerParser() {
+    @LocalServerPort
+    Integer port;
+
+    @PostConstruct
+    void setUp() {
+        RestAssured.port = port;
         RestAssured.registerParser("text/plain", Parser.TEXT);
     }
 
