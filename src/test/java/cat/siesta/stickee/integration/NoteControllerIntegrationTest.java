@@ -25,7 +25,7 @@ public class NoteControllerIntegrationTest {
     private Note noteHello = new Note("Hello world!");
     private Note noteBye = new Note("Bye!");
     private Note noteHtml = new Note("<b>Bold</b>");
-    private Note noteJson = new Note("{ \"text\": \"Hello\"}");
+    private Note noteJson = new Note("{ \"text\": \"Hello\" }");
 
     @Value("${stickee.notes-base-path}")
     private String notesBasePath;
