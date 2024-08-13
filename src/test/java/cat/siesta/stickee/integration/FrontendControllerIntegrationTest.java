@@ -1,6 +1,6 @@
 package cat.siesta.stickee.integration;
 
-import static io.restassured.RestAssured.when;
+import static io.restassured.RestAssured.given;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,14 +25,14 @@ public class FrontendControllerIntegrationTest {
 
     @Test
     public void testHome() throws Exception {
-        when().get("/").then().assertThat()
+        given().get("/").then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType(ContentType.HTML);
     }
 
     @Test
     public void testCss() throws Exception {
-        when().get("/main.css").then().assertThat()
+        given().get("/main.css").then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/css");
     }

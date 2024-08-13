@@ -1,7 +1,6 @@
 package cat.siesta.stickee.integration;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.util.UUID;
@@ -48,12 +47,12 @@ public class NoteControllerIntegrationTest {
         String noteHelloId = noteService.create(noteHello).getResourceLocator().orElseThrow();
         String noteByeId = noteService.create(noteBye).getResourceLocator().orElseThrow();
 
-        when().get(notesBasePath + "/" + noteHelloId).then().assertThat()
+        given().get(notesBasePath + "/" + noteHelloId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("Hello world!"))
                 .contentType("text/plain");
 
-        when().get(notesBasePath + "/" + noteByeId).then().assertThat()
+        given().get(notesBasePath + "/" + noteByeId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("Bye!"))
                 .contentType("text/plain");
@@ -65,19 +64,19 @@ public class NoteControllerIntegrationTest {
         String noteJsonId = noteService.create(noteJson).getResourceLocator().orElseThrow();
 
         given().header("Accept", "text/html")
-            .when().get(notesBasePath + "/" + noteHtmlId).then().assertThat()
+            .given().get(notesBasePath + "/" + noteHtmlId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/plain");
         
         given().header("Accept", "application/json")
-            .when().get(notesBasePath + "/" + noteJsonId).then().assertThat()
+            .given().get(notesBasePath + "/" + noteJsonId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/plain");
     }
 
     @Test
     void shouldGetNotFoundWhenNotExisting() {
-        when().get(notesBasePath + "/" + UUID.randomUUID()).then().assertThat()
+        given().get(notesBasePath + "/" + UUID.randomUUID()).then().assertThat()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
@@ -93,7 +92,7 @@ public class NoteControllerIntegrationTest {
 
         var location = response.header("Location");
 
-        when().get(location).then().assertThat()
+        given().get(location).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo(text));
     }
