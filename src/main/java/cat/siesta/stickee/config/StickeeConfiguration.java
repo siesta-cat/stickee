@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Configuration
 @ConfigurationProperties
-@PropertySource("classpath:stickee.yml")
+@PropertySource("classpath:stickee.yaml")
 @Getter
 @Setter
 public class StickeeConfiguration {
