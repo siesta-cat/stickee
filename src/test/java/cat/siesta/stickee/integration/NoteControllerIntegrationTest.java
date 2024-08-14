@@ -15,7 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import cat.siesta.stickee.config.StickeeConfiguration;
+import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.persistence.Note;
 import cat.siesta.stickee.service.NoteService;
 import io.restassured.RestAssured;
@@ -31,7 +31,7 @@ public class NoteControllerIntegrationTest {
     private Note noteJson = new Note("{ \"text\": \"Hello\" }");
 
     @Autowired
-    StickeeConfiguration stickeeConfiguration;
+    StickeeConfig stickeeConfig;
 
     @Autowired
     NoteService noteService;
@@ -50,12 +50,12 @@ public class NoteControllerIntegrationTest {
         String noteHelloId = noteService.create(noteHello).getId().orElseThrow();
         String noteByeId = noteService.create(noteBye).getId().orElseThrow();
 
-        given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteHelloId).then().assertThat()
+        given().get(stickeeConfig.getNotesBasePath() + "/" + noteHelloId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("Hello world!"))
                 .contentType("text/plain");
 
-        given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteByeId).then().assertThat()
+        given().get(stickeeConfig.getNotesBasePath() + "/" + noteByeId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo("Bye!"))
                 .contentType("text/plain");
@@ -67,13 +67,13 @@ public class NoteControllerIntegrationTest {
         String noteJsonId = noteService.create(noteJson).getId().orElseThrow();
 
         given().header("Accept", "text/html")
-                .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteHtmlId).then()
+                .given().get(stickeeConfig.getNotesBasePath() + "/" + noteHtmlId).then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/plain");
 
         given().header("Accept", "application/json")
-                .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteJsonId).then()
+                .given().get(stickeeConfig.getNotesBasePath() + "/" + noteJsonId).then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/plain");
@@ -81,7 +81,7 @@ public class NoteControllerIntegrationTest {
 
     @Test
     void shouldGetNotFoundWhenNotExisting() {
-        given().get(stickeeConfiguration.getNotesBasePath() + "/" + UUID.randomUUID()).then().assertThat()
+        given().get(stickeeConfig.getNotesBasePath() + "/" + UUID.randomUUID()).then().assertThat()
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
@@ -91,7 +91,7 @@ public class NoteControllerIntegrationTest {
 
         var response = given()
                 .param("text", text)
-                .post(stickeeConfiguration.getNotesBasePath() + "/create").then().assertThat()
+                .post(stickeeConfig.getNotesBasePath() + "/create").then().assertThat()
                 .statusCode(HttpStatus.FOUND.value())
                 .extract();
 
@@ -107,11 +107,11 @@ public class NoteControllerIntegrationTest {
         var marginSeconds = 5;
 
         var noteId = noteService.create(noteHello).getId().orElseThrow();
-        var expectedCache = stickeeConfiguration.getNoteMaxAge();
+        var expectedCache = stickeeConfig.getNoteMaxAge();
         Stream<String> validRange = IntStream.range(-marginSeconds, marginSeconds)
                 .mapToObj(margin -> "max-age=" + (expectedCache + margin) + ", public, immutable");
 
-        var cacheControlValue = given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteId)
+        var cacheControlValue = given().get(stickeeConfig.getNotesBasePath() + "/" + noteId)
                 .header("Cache-control");
 
         assertTrue(validRange.anyMatch(valid -> valid.equals(cacheControlValue)));

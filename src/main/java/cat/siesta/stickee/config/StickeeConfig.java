@@ -12,7 +12,7 @@ import lombok.Setter;
 @PropertySource("classpath:stickee.yaml")
 @Getter
 @Setter
-public class StickeeConfiguration {
+public class StickeeConfig {
     private String notesBasePath;
     private Integer noteMaxAge;
 }

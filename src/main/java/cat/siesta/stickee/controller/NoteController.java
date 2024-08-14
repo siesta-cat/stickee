@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import cat.siesta.stickee.config.StickeeConfiguration;
+import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.persistence.Note;
 import cat.siesta.stickee.service.NoteService;
 
@@ -25,7 +25,7 @@ import cat.siesta.stickee.service.NoteService;
 public class NoteController {
 
     @Autowired
-    private StickeeConfiguration stickeeConfiguration;
+    private StickeeConfig stickeeConfig;
 
     @Autowired
     private NoteService noteService;
@@ -34,7 +34,7 @@ public class NoteController {
     public ResponseEntity<String> getNote(@PathVariable("id") String id) {
         var maybeNote = noteService.get(id);
         var noteCreationDate = maybeNote.map(note -> note.getCreationTimestamp()).orElse(LocalDateTime.now());
-        var cacheMaxAge = stickeeConfiguration.getNoteMaxAge()
+        var cacheMaxAge = stickeeConfig.getNoteMaxAge()
                 - ChronoUnit.SECONDS.between(noteCreationDate, LocalDateTime.now());
         var cacheControl = CacheControl.maxAge(cacheMaxAge, TimeUnit.SECONDS).cachePublic().immutable();
 
@@ -51,7 +51,7 @@ public class NoteController {
         var id = noteService.create(new Note(text)).getId().orElseThrow().toString();
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .header("Location", "/" + stickeeConfiguration.getNotesBasePath() + "/" + id)
+                .header("Location", "/" + stickeeConfig.getNotesBasePath() + "/" + id)
                 .build();
     }
 }

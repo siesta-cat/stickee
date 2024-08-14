@@ -12,7 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import cat.siesta.stickee.config.StickeeConfiguration;
+import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.service.NoteService;
 import io.restassured.RestAssured;
 import jakarta.annotation.PostConstruct;
@@ -21,7 +21,7 @@ import jakarta.annotation.PostConstruct;
 public class ControlerAdviceTest {
 
     @Autowired
-    StickeeConfiguration stickeeConfiguration;
+    StickeeConfig stickeeConfig;
 
     @MockBean
     NoteService noteService;
@@ -38,7 +38,7 @@ public class ControlerAdviceTest {
     public void testUnhandledException() throws Exception {
         given(noteService.get(any())).willThrow(RuntimeException.class);
 
-        given().get(stickeeConfiguration.getNotesBasePath() + "/" + "awjendkewjn").then().assertThat()
+        given().get(stickeeConfig.getNotesBasePath() + "/" + "awjendkewjn").then().assertThat()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 }
