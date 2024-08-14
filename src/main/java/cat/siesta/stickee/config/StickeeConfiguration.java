@@ -14,4 +14,5 @@ import lombok.Setter;
 @Setter
 public class StickeeConfiguration {
     private String notesBasePath;
+    private Integer noteMaxAge;
 }

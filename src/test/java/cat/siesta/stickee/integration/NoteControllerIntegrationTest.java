@@ -3,6 +3,7 @@ package cat.siesta.stickee.integration;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -22,78 +23,90 @@ import jakarta.annotation.PostConstruct;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class NoteControllerIntegrationTest {
 
-    private Note noteHello = new Note("Hello world!");
-    private Note noteBye = new Note("Bye!");
-    private Note noteHtml = new Note("<b>Bold</b>");
-    private Note noteJson = new Note("{ \"text\": \"Hello\" }");
+        private Note noteHello = new Note("Hello world!");
+        private Note noteBye = new Note("Bye!");
+        private Note noteHtml = new Note("<b>Bold</b>");
+        private Note noteJson = new Note("{ \"text\": \"Hello\" }");
 
-    @Autowired
-    StickeeConfiguration stickeeConfiguration;
+        @Autowired
+        StickeeConfiguration stickeeConfiguration;
 
-    @Autowired
-    NoteService noteService;
+        @Autowired
+        NoteService noteService;
 
-    @LocalServerPort
-    Integer port;
+        @LocalServerPort
+        Integer port;
 
-    @PostConstruct
-    void setUp() {
-        RestAssured.port = port;
-        RestAssured.registerParser("text/plain", Parser.TEXT);
-    }
+        @PostConstruct
+        void setUp() {
+                RestAssured.port = port;
+                RestAssured.registerParser("text/plain", Parser.TEXT);
+        }
 
-    @Test
-    void shouldGetWhenExisting() {
-        String noteHelloId = noteService.create(noteHello).getId().orElseThrow();
-        String noteByeId = noteService.create(noteBye).getId().orElseThrow();
+        @Test
+        void shouldGetWhenExisting() {
+                String noteHelloId = noteService.create(noteHello).getId().orElseThrow();
+                String noteByeId = noteService.create(noteBye).getId().orElseThrow();
 
-        given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteHelloId).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body(equalTo("Hello world!"))
-                .contentType("text/plain");
+                given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteHelloId).then().assertThat()
+                                .statusCode(HttpStatus.OK.value())
+                                .body(equalTo("Hello world!"))
+                                .contentType("text/plain");
 
-        given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteByeId).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body(equalTo("Bye!"))
-                .contentType("text/plain");
-    }
+                given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteByeId).then().assertThat()
+                                .statusCode(HttpStatus.OK.value())
+                                .body(equalTo("Bye!"))
+                                .contentType("text/plain");
+        }
 
-    @Test
-    void shouldAlwaysReturnPlainText() {
-        String noteHtmlId = noteService.create(noteHtml).getId().orElseThrow();
-        String noteJsonId = noteService.create(noteJson).getId().orElseThrow();
+        @Test
+        void shouldAlwaysReturnPlainText() {
+                String noteHtmlId = noteService.create(noteHtml).getId().orElseThrow();
+                String noteJsonId = noteService.create(noteJson).getId().orElseThrow();
 
-        given().header("Accept", "text/html")
-            .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteHtmlId).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .contentType("text/plain");
-        
-        given().header("Accept", "application/json")
-            .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteJsonId).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .contentType("text/plain");
-    }
+                given().header("Accept", "text/html")
+                                .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteHtmlId).then()
+                                .assertThat()
+                                .statusCode(HttpStatus.OK.value())
+                                .contentType("text/plain");
 
-    @Test
-    void shouldGetNotFoundWhenNotExisting() {
-        given().get(stickeeConfiguration.getNotesBasePath() + "/" + UUID.randomUUID()).then().assertThat()
-                .statusCode(HttpStatus.NOT_FOUND.value());
-    }
+                given().header("Accept", "application/json")
+                                .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteJsonId).then()
+                                .assertThat()
+                                .statusCode(HttpStatus.OK.value())
+                                .contentType("text/plain");
+        }
 
-    @Test
-    void shouldCreateAndGet() {
-        var text = "Posting!";
+        @Test
+        void shouldGetNotFoundWhenNotExisting() {
+                given().get(stickeeConfiguration.getNotesBasePath() + "/" + UUID.randomUUID()).then().assertThat()
+                                .statusCode(HttpStatus.NOT_FOUND.value());
+        }
 
-        var response = given()
-                .param("text", text)
-                .post(stickeeConfiguration.getNotesBasePath() + "/create").then().assertThat()
-                .statusCode(HttpStatus.FOUND.value())
-                .extract();
+        @Test
+        void shouldCreateAndGet() {
+                var text = "Posting!";
 
-        var location = response.header("Location");
+                var response = given()
+                                .param("text", text)
+                                .post(stickeeConfiguration.getNotesBasePath() + "/create").then().assertThat()
+                                .statusCode(HttpStatus.FOUND.value())
+                                .extract();
 
-        given().get(location).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body(equalTo(text));
-    }
+                var location = response.header("Location");
+
+                given().get(location).then().assertThat()
+                                .statusCode(HttpStatus.OK.value())
+                                .body(equalTo(text));
+        }
+
+        @Test
+        void shouldContainCacheHeadersOnGet() {
+                var noteId = noteService.create(noteHello).getId().orElseThrow();
+                var noteCreation = noteService.get(noteId).get().getCreationTimestamp();
+                var expectedCache = LocalDateTime.now().compareTo(noteCreation) * stickeeConfiguration.getNoteMaxAge();
+
+                given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteId).then().assertThat()
+                                .header("Cache-control", "max-age=" + expectedCache + ", public, immutable");
+        }
 }
