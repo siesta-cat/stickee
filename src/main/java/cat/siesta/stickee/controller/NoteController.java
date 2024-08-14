@@ -1,6 +1,7 @@
 package cat.siesta.stickee.controller;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,8 @@ public class NoteController {
     public ResponseEntity<String> getNote(@PathVariable("id") String id) {
         var maybeNote = noteService.get(id);
         var noteCreationDate = maybeNote.map(note -> note.getCreationTimestamp()).orElse(LocalDateTime.now());
-        var cacheMaxAge = LocalDateTime.now().compareTo(noteCreationDate) * stickeeConfiguration.getNoteMaxAge();
+        var cacheMaxAge = stickeeConfiguration.getNoteMaxAge()
+                - ChronoUnit.SECONDS.between(noteCreationDate, LocalDateTime.now());
         var cacheControl = CacheControl.maxAge(cacheMaxAge, TimeUnit.SECONDS).cachePublic().immutable();
 
         return maybeNote.map(note -> ResponseEntity
