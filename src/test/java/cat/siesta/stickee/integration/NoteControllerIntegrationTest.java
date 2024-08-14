@@ -2,8 +2,11 @@ package cat.siesta.stickee.integration;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.UUID;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,12 +67,14 @@ public class NoteControllerIntegrationTest {
         String noteJsonId = noteService.create(noteJson).getId().orElseThrow();
 
         given().header("Accept", "text/html")
-            .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteHtmlId).then().assertThat()
+                .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteHtmlId).then()
+                .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/plain");
-        
+
         given().header("Accept", "application/json")
-            .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteJsonId).then().assertThat()
+                .given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteJsonId).then()
+                .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/plain");
     }
@@ -95,5 +100,20 @@ public class NoteControllerIntegrationTest {
         given().get(location).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo(text));
+    }
+
+    @Test
+    void shouldContainCacheHeadersOnGet() {
+        var marginSeconds = 5;
+
+        var noteId = noteService.create(noteHello).getId().orElseThrow();
+        var expectedCache = stickeeConfiguration.getNoteMaxAge();
+        Stream<String> validRange = IntStream.range(-marginSeconds, marginSeconds)
+                .mapToObj(margin -> "max-age=" + (expectedCache + margin) + ", public, immutable");
+
+        var cacheControlValue = given().get(stickeeConfiguration.getNotesBasePath() + "/" + noteId)
+                .header("Cache-control");
+
+        assertTrue(validRange.anyMatch(valid -> valid.equals(cacheControlValue)));
     }
 }
