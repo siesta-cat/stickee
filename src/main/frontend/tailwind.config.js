@@ -4,11 +4,11 @@ const colors = require('tailwindcss/colors');
 module.exports = {
   content: ["../resources/templates/**/*.{html,js}"],
   theme: {
-    colors: {
-      primary: colors.violet,
-      ...colors
+    extend: {
+      colors: {
+        primary: colors.violet,
+      }
     },
-    extend: {},
   },
   plugins: [],
 }
