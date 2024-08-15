@@ -18,9 +18,9 @@ public class NoteIdGeneratorService {
 
     public String generate() {
         String generatedId = Stream.generate(() -> RandomStringUtils.randomAlphanumeric(ID_LENGTH))
-            .filter(id -> !noteRepository.existsById(id))
-            .findFirst()
-            .get();
+                .filter(id -> !noteRepository.existsById(id))
+                .findFirst()
+                .get();
         return generatedId;
     }
 }

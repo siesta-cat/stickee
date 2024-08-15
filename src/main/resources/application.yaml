@@ -1,23 +1,23 @@
 spring:
-    application:
-        name: stickee
-    banner:
-        location: classpath:banner.txt
-    datasource:
-        url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;MODE=PostgreSQL;
-    jpa:
-        open-in-view: false
-    web:
-        resources:
-            cache:
-                cachecontrol:
-                    max-age: 365d
-                    cache-public: true
-            chain:
-                strategy:
-                    content:
-                        enabled: true
-                        paths: /**/*.css
+  application:
+    name: stickee
+  banner:
+    location: classpath:banner.txt
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;MODE=PostgreSQL;
+  jpa:
+    open-in-view: false
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 365d
+          cache-public: true
+      chain:
+        strategy:
+          content:
+            enabled: true
+            paths: /**/*.css
 server:
-    error:
-        include-stacktrace: never
+  error:
+    include-stacktrace: never

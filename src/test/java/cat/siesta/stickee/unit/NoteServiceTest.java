@@ -28,7 +28,7 @@ public class NoteServiceTest {
 
     @Autowired
     private NoteService noteService;
-    
+
     @Autowired
     private NoteIdGeneratorService generatorService;
 
@@ -75,9 +75,9 @@ public class NoteServiceTest {
         var noteToInsert = NoteStubBuilder.create().build();
 
         given(noteRepository.existsById(anyString()))
-            .willReturn(true).willReturn(false);
+                .willReturn(true).willReturn(false);
         noteService.create(noteToInsert);
-        
+
         verify(noteRepository, times(2)).existsById(anyString());
         verify(noteRepository).save(any());
     }
@@ -86,12 +86,12 @@ public class NoteServiceTest {
     void IdsHaveDifferentAlphanumericValues() {
         var numberOfIdsToGenerate = 50;
         given(noteRepository.existsById(anyString())).willReturn(false);
-        
+
         var distinctGeneratedIds = IntStream.range(0, numberOfIdsToGenerate)
-            .mapToObj(i -> generatorService.generate())
-            .distinct()
-            .collect(Collectors.toList());
-        
+                .mapToObj(i -> generatorService.generate())
+                .distinct()
+                .collect(Collectors.toList());
+
         assertTrue(distinctGeneratedIds.stream().allMatch(StringUtils::isAlphanumeric));
         assertEquals(numberOfIdsToGenerate, distinctGeneratedIds.size());
     }

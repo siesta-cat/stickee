@@ -11,15 +11,15 @@ public class AppControllerAdvice {
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<String> handle(ResponseStatusException e) {
         return ResponseEntity
-            .status(e.getStatusCode())
-            .body(e.getBody().getDetail());
+                .status(e.getStatusCode())
+                .body(e.getBody().getDetail());
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handle(Exception e) {
         e.printStackTrace();
         return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body("internal server error");
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("internal server error");
     }
 }
