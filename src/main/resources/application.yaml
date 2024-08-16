@@ -5,8 +5,12 @@ spring:
     location: classpath:banner.txt
   datasource:
     url: ${JDBC_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     open-in-view: false
+    hibernate:
+      ddl-auto: update
   web:
     resources:
       cache:
