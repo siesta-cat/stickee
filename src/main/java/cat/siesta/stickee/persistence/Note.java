@@ -20,8 +20,7 @@ public class Note {
     @Id
     private String id;
 
-    @Column(nullable = false)
-    @Lob
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String text;
 
     @Column(nullable = false)
