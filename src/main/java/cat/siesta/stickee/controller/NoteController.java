@@ -19,7 +19,9 @@ import org.springframework.web.server.ResponseStatusException;
 import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.persistence.Note;
 import cat.siesta.stickee.service.NoteService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("${notes-base-path}")
 public class NoteController {
@@ -32,6 +34,8 @@ public class NoteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<String> getNote(@PathVariable("id") String id) {
+        log.debug("Received request for note with id: {}", id);
+
         var maybeNote = noteService.get(id);
         var noteCreationDate = maybeNote.map(note -> note.getCreationTimestamp()).orElse(LocalDateTime.now());
         var cacheMaxAge = stickeeConfig.getNoteMaxAge()
@@ -49,6 +53,9 @@ public class NoteController {
     @PostMapping("/create")
     public ResponseEntity<String> postNote(@RequestParam("text") String text) {
         var id = noteService.create(new Note(text)).getId().orElseThrow().toString();
+
+        log.info("Note created with id: {}", id);
+
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header("Location", "/" + stickeeConfig.getNotesBasePath() + "/" + id)

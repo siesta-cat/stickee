@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cat.siesta.stickee.persistence.NoteRepository;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class NoteIdGeneratorService {
 
@@ -17,10 +19,16 @@ public class NoteIdGeneratorService {
     private NoteRepository noteRepository;
 
     public String generate() {
-        String generatedId = Stream.generate(() -> RandomStringUtils.randomAlphanumeric(ID_LENGTH))
+        String generatedId = Stream.generate(this::generateSingleId)
                 .filter(id -> !noteRepository.existsById(id))
                 .findFirst()
                 .get();
         return generatedId;
+    }
+
+    private String generateSingleId() {
+        var id = RandomStringUtils.randomAlphanumeric(ID_LENGTH);
+        log.debug("Generated id {}", id);
+        return id;
     }
 }

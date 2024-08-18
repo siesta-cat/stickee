@@ -22,3 +22,7 @@ spring:
           content:
             enabled: true
             paths: /**/*.css
+logging:
+  level:
+    "[cat.siesta.stickee]": ${LOG_LEVEL_STICKEE:info}
+    root: ${LOG_LEVEL_GLOBAL:info}
