@@ -35,10 +35,16 @@ public class ControlerAdviceTest {
     }
 
     @Test
-    public void testUnhandledException() throws Exception {
-        given(noteService.get(any())).willThrow(RuntimeException.class);
+    public void testUnhandledException() {
+        given(noteService.get(any())).willThrow(new RuntimeException("Test exception"));
 
         given().get(stickeeConfig.getNotesBasePath() + "/" + "awjendkewjn").then().assertThat()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+
+    @Test
+    public void testStaticResourceNotFound() {
+        given().get("/unexisting.css").then().assertThat()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 }
