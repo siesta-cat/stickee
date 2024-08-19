@@ -1,2 +1,3 @@
 notes-base-path: notes
 note-max-age: 604800
+note-max-size: 200MB

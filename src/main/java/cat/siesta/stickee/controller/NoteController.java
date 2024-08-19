@@ -52,6 +52,11 @@ public class NoteController {
 
     @PostMapping("/create")
     public ResponseEntity<String> postNote(@RequestParam("text") String text) {
+        if (text.getBytes().length > stickeeConfig.getNoteMaxSize().toBytes()) {
+            throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE,
+                    "the max size of a note is " + stickeeConfig.getNoteMaxSize().toString());
+        }
+
         var id = noteService.create(new Note(text)).getId().orElseThrow().toString();
 
         log.info("Note created with id: {}", id);

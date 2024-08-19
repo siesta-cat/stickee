@@ -3,6 +3,7 @@ package cat.siesta.stickee.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.util.unit.DataSize;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,4 +16,5 @@ import lombok.Setter;
 public class StickeeConfig {
     private String notesBasePath;
     private Integer noteMaxAge;
+    private DataSize noteMaxSize;
 }

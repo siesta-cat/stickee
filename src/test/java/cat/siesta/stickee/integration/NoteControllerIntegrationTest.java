@@ -8,6 +8,7 @@ import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +23,7 @@ import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import jakarta.annotation.PostConstruct;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = { "note-max-size=1KB" })
 public class NoteControllerIntegrationTest {
 
     private Note noteHello = new Note("Hello world!");
@@ -115,5 +116,14 @@ public class NoteControllerIntegrationTest {
                 .header("Cache-control");
 
         assertTrue(validRange.anyMatch(valid -> valid.equals(cacheControlValue)));
+    }
+
+    @Test
+    void shouldGetPayloadTooLargeOnBigNote() {
+        var text = RandomStringUtils.randomAscii((int) stickeeConfig.getNoteMaxSize().toBytes() + 1);
+
+        given().param("text", text)
+                .post(stickeeConfig.getNotesBasePath() + "/create").then().assertThat()
+                .statusCode(HttpStatus.PAYLOAD_TOO_LARGE.value());
     }
 }
