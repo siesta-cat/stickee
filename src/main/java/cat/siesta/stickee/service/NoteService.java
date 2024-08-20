@@ -19,7 +19,7 @@ public class NoteService {
 
     public Note create(Note note) {
         var id = idGeneratorService.generate();
-        var noteWithId = new Note(id, note.getText());
+        var noteWithId = Note.builder().id(id).text(note.getText()).build();
         return noteRepository.save(noteWithId);
     }
 

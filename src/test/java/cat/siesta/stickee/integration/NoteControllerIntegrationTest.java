@@ -26,10 +26,10 @@ import jakarta.annotation.PostConstruct;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = { "note-max-size=1KB" })
 public class NoteControllerIntegrationTest {
 
-    private Note noteHello = new Note("Hello world!");
-    private Note noteBye = new Note("Bye!");
-    private Note noteHtml = new Note("<b>Bold</b>");
-    private Note noteJson = new Note("{ \"text\": \"Hello\" }");
+    private Note noteHello = Note.builder().text("Hello world!").build();
+    private Note noteBye = Note.builder().text("Bye!").build();
+    private Note noteHtml = Note.builder().text("<b>Bold</b>").build();
+    private Note noteJson = Note.builder().text("{ \"text\": \"Hello\" }").build();
 
     @Autowired
     StickeeConfig stickeeConfig;

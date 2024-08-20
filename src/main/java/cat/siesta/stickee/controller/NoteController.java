@@ -57,7 +57,8 @@ public class NoteController {
                     "the max size of a note is " + stickeeConfig.getNoteMaxSize().toString());
         }
 
-        var id = noteService.create(new Note(text)).getId().orElseThrow().toString();
+        var id = noteService.create(Note.builder().text(text).build())
+                .getId().orElseThrow().toString();
 
         log.info("Note created with id: {}", id);
 

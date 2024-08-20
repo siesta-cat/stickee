@@ -6,37 +6,33 @@ import java.util.Optional;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
 @ToString
 @EqualsAndHashCode
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Note {
 
     @Id
     private String id;
 
+    @Default
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String text;
+    private String text = "";
 
+    @Default
     @Column(nullable = false)
-    private final LocalDateTime creationTimestamp = LocalDateTime.now();
-
-    public Note() {
-        this.text = "";
-    }
-
-    public Note(String text) {
-        this.text = text;
-    }
-
-    public Note(String id, String text) {
-        this.id = id;
-        this.text = text;
-    }
+    private LocalDateTime creationTimestamp = LocalDateTime.now();
 
     public Optional<String> getId() {
         return Optional.ofNullable(this.id);

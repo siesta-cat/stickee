@@ -21,7 +21,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import cat.siesta.stickee.persistence.NoteRepository;
 import cat.siesta.stickee.service.NoteIdGeneratorService;
 import cat.siesta.stickee.service.NoteService;
-import cat.siesta.stickee.utils.NoteStubBuilder;
+import cat.siesta.stickee.utils.NoteStub;
 
 @SpringBootTest
 public class NoteServiceTest {
@@ -37,7 +37,7 @@ public class NoteServiceTest {
 
     @Test
     void shouldSave() {
-        var note = NoteStubBuilder.create().build();
+        var note = NoteStub.builder().build();
 
         given(noteRepository.save(any())).willReturn(note);
         var savedNote = noteService.create(note);
@@ -48,9 +48,9 @@ public class NoteServiceTest {
     @Test
     void shouldGetWhenExisting() {
         var id = "1a2";
-        var note = NoteStubBuilder.create()
-                .withText("I should be get")
-                .withId(id)
+        var note = NoteStub.builder()
+                .text("I should be get")
+                .id(id)
                 .build();
 
         given(noteRepository.findById(id)).willReturn(Optional.of(note));
@@ -72,7 +72,7 @@ public class NoteServiceTest {
 
     @Test
     void shouldRegenerateNewIdOnCollision() {
-        var noteToInsert = NoteStubBuilder.create().build();
+        var noteToInsert = NoteStub.builder().build();
 
         given(noteRepository.existsById(anyString()))
                 .willReturn(true).willReturn(false);
