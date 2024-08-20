@@ -108,7 +108,7 @@ public class NoteControllerIntegrationTest {
         var marginSeconds = 5;
 
         var noteId = noteService.create(noteHello).getId().orElseThrow();
-        var expectedCache = stickeeConfig.getNoteMaxAge();
+        var expectedCache = stickeeConfig.getNoteMaxAge().toSeconds();
         Stream<String> validRange = IntStream.range(-marginSeconds, marginSeconds)
                 .mapToObj(margin -> "max-age=" + (expectedCache + margin) + ", public, immutable");
 

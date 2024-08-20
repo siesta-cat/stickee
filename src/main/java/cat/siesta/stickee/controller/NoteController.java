@@ -38,7 +38,7 @@ public class NoteController {
 
         var maybeNote = noteService.get(id);
         var noteCreationDate = maybeNote.map(note -> note.getCreationTimestamp()).orElse(LocalDateTime.now());
-        var cacheMaxAge = stickeeConfig.getNoteMaxAge()
+        var cacheMaxAge = stickeeConfig.getNoteMaxAge().toSeconds()
                 - ChronoUnit.SECONDS.between(noteCreationDate, LocalDateTime.now());
         var cacheControl = CacheControl.maxAge(cacheMaxAge, TimeUnit.SECONDS).cachePublic().immutable();
 
