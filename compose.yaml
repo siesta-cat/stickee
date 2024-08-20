@@ -1,6 +1,10 @@
 services:
   stickee:
     build: .
+    develop:
+      watch:
+        - path: src/
+          action: rebuild
     ports:
       - 8080:8080
     depends_on:
