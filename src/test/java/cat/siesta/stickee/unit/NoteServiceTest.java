@@ -37,12 +37,13 @@ public class NoteServiceTest {
 
     @Test
     void shouldSave() {
+        // TODO: Make this test integration
         var note = NoteStub.builder().build();
 
         given(noteRepository.save(any())).willReturn(note);
         var savedNote = noteService.create(note);
 
-        assertEquals(note.getText(), savedNote.getText());
+        assertEquals(note, savedNote);
     }
 
     @Test
