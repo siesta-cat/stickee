@@ -1,3 +1,4 @@
 notes-base-path: notes
 note-max-age: 7d
 note-max-size: 200MB
+note-deletion-rate: 5m
