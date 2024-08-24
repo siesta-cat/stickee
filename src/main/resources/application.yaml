@@ -7,6 +7,10 @@ spring:
     url: ${JDBC_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+  docker:
+    compose:
+      skip:
+        in-tests: false
   jpa:
     open-in-view: false
     hibernate:

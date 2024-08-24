@@ -23,7 +23,7 @@ import cat.siesta.stickee.service.NoteIdGeneratorService;
 import cat.siesta.stickee.service.NoteService;
 import cat.siesta.stickee.utils.NoteStub;
 
-@SpringBootTest
+@SpringBootTest(properties = "scheduling.enabled=false")
 public class NoteServiceTest {
 
     @Autowired

@@ -3,13 +3,6 @@ WORKDIR /build
 COPY --chmod=755 mvnw mvnw
 COPY .mvn/ .mvn/
 
-FROM base AS test
-WORKDIR /build
-COPY ./src src/
-RUN --mount=type=bind,source=pom.xml,target=pom.xml \
-    --mount=type=cache,target=/root/.m2 \
-    ./mvnw test
-
 FROM base AS deps
 WORKDIR /build
 RUN --mount=type=bind,source=pom.xml,target=pom.xml \
