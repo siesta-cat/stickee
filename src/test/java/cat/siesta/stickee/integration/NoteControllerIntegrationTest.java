@@ -1,6 +1,7 @@
 package cat.siesta.stickee.integration;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -125,5 +126,13 @@ public class NoteControllerIntegrationTest {
         given().param("text", text)
                 .post(stickeeConfig.getNotesBasePath() + "/create").then().assertThat()
                 .statusCode(HttpStatus.PAYLOAD_TOO_LARGE.value());
+    }
+
+    @Test
+    void shouldGetBadRequestOnEmptyNote() {
+        given().param("text", "")
+                .post(stickeeConfig.getNotesBasePath() + "/create").then().assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .body(containsString("text cannot be empty"));
     }
 }

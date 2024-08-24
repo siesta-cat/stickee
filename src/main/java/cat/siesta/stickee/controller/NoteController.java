@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.persistence.Note;
 import cat.siesta.stickee.service.NoteService;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -51,7 +51,8 @@ public class NoteController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<String> postNote(@RequestParam("text") String text) {
+    public ResponseEntity<String> postNote(
+            @NotEmpty(message = "text cannot be empty") String text) {
         if (text.getBytes().length > stickeeConfig.getNoteMaxSize().toBytes()) {
             throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE,
                     "the max size of a note is " + stickeeConfig.getNoteMaxSize().toString());
