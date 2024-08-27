@@ -1,6 +1,7 @@
 package cat.siesta.stickee.persistence;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import jakarta.persistence.Column;
@@ -32,7 +33,11 @@ public class Note {
 
     @Default
     @Column(nullable = false)
-    private LocalDateTime creationTimestamp = LocalDateTime.now();
+    private LocalDateTime creationTimestamp = LocalDateTime.now().truncatedTo(ChronoUnit.MILLIS);
+
+    public Note withId(String id) {
+        return new Note(id, this.getText(), this.getCreationTimestamp());
+    }
 
     public Optional<String> getId() {
         return Optional.ofNullable(this.id);
