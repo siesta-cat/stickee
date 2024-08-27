@@ -84,7 +84,7 @@ public class NoteServiceTest {
     }
 
     @Test
-    void IdsHaveDifferentAlphanumericValues() {
+    void shouldGenerateDistinctAlphanumericIds() {
         var numberOfIdsToGenerate = 50;
         given(noteRepository.existsById(anyString())).willReturn(false);
 
