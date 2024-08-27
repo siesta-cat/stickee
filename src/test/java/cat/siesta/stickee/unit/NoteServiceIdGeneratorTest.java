@@ -8,7 +8,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -24,7 +23,7 @@ import cat.siesta.stickee.service.NoteService;
 import cat.siesta.stickee.utils.NoteStub;
 
 @SpringBootTest(properties = "scheduling.enabled=false")
-public class NoteServiceTest {
+public class NoteServiceIdGeneratorTest {
 
     @Autowired
     private NoteService noteService;
@@ -34,42 +33,6 @@ public class NoteServiceTest {
 
     @MockBean
     private NoteRepository noteRepository;
-
-    @Test
-    void shouldSave() {
-        // TODO: Make this test integration
-        var note = NoteStub.builder().build();
-
-        given(noteRepository.save(any())).willReturn(note);
-        var savedNote = noteService.create(note);
-
-        assertEquals(note, savedNote);
-    }
-
-    @Test
-    void shouldGetWhenExisting() {
-        var id = "1a2";
-        var note = NoteStub.builder()
-                .text("I should be get")
-                .id(id)
-                .build();
-
-        given(noteRepository.findById(id)).willReturn(Optional.of(note));
-        var maybeNote = noteService.get(id);
-
-        assertTrue(maybeNote.isPresent());
-        assertEquals(note, maybeNote.get());
-    }
-
-    @Test
-    void shouldGetEmptyWhenAbsent() {
-        var id = "1v4";
-
-        given(noteRepository.findById(id)).willReturn(Optional.empty());
-        var maybeNote = noteService.get(id);
-
-        assertTrue(maybeNote.isEmpty());
-    }
 
     @Test
     void shouldRegenerateNewIdOnCollision() {
