@@ -13,7 +13,7 @@ import io.restassured.http.ContentType;
 import jakarta.annotation.PostConstruct;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class FrontendControllerIntegrationTest {
+public class FrontendControllerTest {
 
     @LocalServerPort
     Integer port;

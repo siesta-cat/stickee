@@ -25,7 +25,7 @@ import io.restassured.parsing.Parser;
 import jakarta.annotation.PostConstruct;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = { "note-max-size=1KB" })
-public class NoteControllerIntegrationTest {
+public class NoteControllerTest {
 
     private Note noteHello = Note.builder().text("Hello world!").build();
     private Note noteBye = Note.builder().text("Bye!").build();
