@@ -1,10 +1,9 @@
 {
-  "dependencies": {},
-  "devDependencies": {
-    "tailwindcss": "3.4.9"
-  },
   "scripts": {
-    "build": "tailwindcss -i ./styles.css -o ../resources/static/main.css --minify",
-    "watch": "tailwindcss -i ./styles.css -o ../resources/static/main.css --watch"
+    "build": "sass styles.scss ../resources/static/main.css --no-source-map --style compressed --quiet"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "sass": "^1.77.8"
   }
 }

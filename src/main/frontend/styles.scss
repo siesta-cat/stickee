@@ -1,0 +1,9 @@
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+
+$theme-colors: (
+  primary: $purple,
+  secondary: $purple-100
+);
+
+@import 'node_modules/bootstrap/scss/bootstrap';
