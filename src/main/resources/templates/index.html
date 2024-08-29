@@ -12,9 +12,13 @@
         <a class="navbar-brand" href="#">Stickee</a>
       </div>
     </nav>
-    <section class="container flex-fill">
-      <p class="text-center fs-2 fw-light m-5 text-body-secondary">
+    <section class="container flex-fill text-center">
+      <p class="fs-2 fw-light m-5">
         A simple and ephemeral text storage application
+      </p>
+      <p class="m-4 text-body-secondary">
+        You can create a note and get a link to share it. All notes are deleted
+        after <span class="text-primary" th:text="${noteMaxAge}" />.
       </p>
       <form
         class="text-center"
