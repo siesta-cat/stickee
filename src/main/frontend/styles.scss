@@ -1,9 +1,13 @@
+@use "sass:map";
+
 @import 'node_modules/bootstrap/scss/functions';
 @import 'node_modules/bootstrap/scss/variables';
 
-$theme-colors: (
+$stickee-colors: (
   primary: $purple,
   secondary: $purple-100
 );
+
+$theme-colors: map.merge($theme-colors, $stickee-colors);
 
 @import 'node_modules/bootstrap/scss/bootstrap';
