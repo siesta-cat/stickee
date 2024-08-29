@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("${notes-base-path}")
+@RequestMapping("${notes.base-path}")
 public class NoteController {
 
     @Autowired
@@ -38,7 +38,7 @@ public class NoteController {
 
         var maybeNote = noteService.get(id);
         var noteCreationDate = maybeNote.map(note -> note.getCreationTimestamp()).orElse(LocalDateTime.now());
-        var cacheMaxAge = Math.max(0, stickeeConfig.getNotesMaxAge().toSeconds()
+        var cacheMaxAge = Math.max(0, stickeeConfig.getMaxAge().toSeconds()
                 - ChronoUnit.SECONDS.between(noteCreationDate, LocalDateTime.now()));
         var cacheControl = CacheControl.maxAge(cacheMaxAge, TimeUnit.SECONDS).cachePublic().immutable();
 
@@ -53,9 +53,9 @@ public class NoteController {
     @PostMapping("/create")
     public ResponseEntity<String> postNote(
             @NotEmpty(message = "text cannot be empty") String text) {
-        if (text.getBytes().length > stickeeConfig.getNotesMaxSize().toBytes()) {
+        if (text.getBytes().length > stickeeConfig.getMaxSize().toBytes()) {
             throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE,
-                    "the max size of a note is " + stickeeConfig.getNotesMaxSize().toString());
+                    "the max size of a note is " + stickeeConfig.getMaxSize().toString());
         }
 
         var id = noteService.create(Note.builder().text(text).build())
@@ -65,7 +65,7 @@ public class NoteController {
 
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .header("Location", "/" + stickeeConfig.getNotesBasePath() + "/" + id)
+                .header("Location", "/" + stickeeConfig.getBasePath() + "/" + id)
                 .build();
     }
 }

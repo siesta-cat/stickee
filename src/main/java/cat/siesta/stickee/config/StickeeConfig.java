@@ -11,13 +11,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Configuration
-@ConfigurationProperties
-@PropertySource("classpath:stickee.yaml")
+@ConfigurationProperties(prefix = "notes")
+@PropertySource("classpath:stickee.properties")
 @Getter
 @Setter
 public class StickeeConfig {
-    private String notesBasePath;
-    private Duration notesMaxAge;
-    private Long notesDeletionDelay;
-    private DataSize notesMaxSize;
+    private String basePath;
+    private Duration maxAge;
+    private Long deletionDelay;
+    private DataSize maxSize;
 }

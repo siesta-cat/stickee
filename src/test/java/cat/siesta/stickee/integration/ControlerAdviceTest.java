@@ -38,7 +38,7 @@ public class ControlerAdviceTest {
     public void testUnhandledException() {
         given(noteService.get(any())).willThrow(new RuntimeException("Test exception"));
 
-        given().get(stickeeConfig.getNotesBasePath() + "/" + "awjendkewjn").then().assertThat()
+        given().get(stickeeConfig.getBasePath() + "/" + "awjendkewjn").then().assertThat()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 

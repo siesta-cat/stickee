@@ -16,9 +16,9 @@ public class FrontendController {
 
 	@GetMapping("/")
 	public String home(Model model) {
-		model.addAttribute("notesBasePath", stickeeConfig.getNotesBasePath());
+		model.addAttribute("notesBasePath", stickeeConfig.getBasePath());
 		model.addAttribute("notesMaxAge",
-				DurationFormatUtils.formatDurationWords(stickeeConfig.getNotesMaxAge().toMillis(), true, true));
+				DurationFormatUtils.formatDurationWords(stickeeConfig.getMaxAge().toMillis(), true, true));
 		return "index";
 	}
 
