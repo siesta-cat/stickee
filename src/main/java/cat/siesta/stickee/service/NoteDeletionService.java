@@ -29,7 +29,9 @@ public class NoteDeletionService {
     public long deleteExpiredNotes() {
         var expiredDate = LocalDateTime.now().minus(stickeeConfig.getNoteMaxAge());
         var deletedNotesCount = noteRepository.deleteAllByCreationTimestampBefore(expiredDate);
-        log.info("{} notes were deleted", deletedNotesCount);
+        if (deletedNotesCount > 0L) {
+            log.info("{} notes were deleted", deletedNotesCount);
+        }
         return deletedNotesCount;
     }
 }
