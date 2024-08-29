@@ -38,7 +38,7 @@ public class NoteController {
 
         var maybeNote = noteService.get(id);
         var noteCreationDate = maybeNote.map(note -> note.getCreationTimestamp()).orElse(LocalDateTime.now());
-        var cacheMaxAge = Math.max(0, stickeeConfig.getNoteMaxAge().toSeconds()
+        var cacheMaxAge = Math.max(0, stickeeConfig.getNotesMaxAge().toSeconds()
                 - ChronoUnit.SECONDS.between(noteCreationDate, LocalDateTime.now()));
         var cacheControl = CacheControl.maxAge(cacheMaxAge, TimeUnit.SECONDS).cachePublic().immutable();
 
@@ -53,9 +53,9 @@ public class NoteController {
     @PostMapping("/create")
     public ResponseEntity<String> postNote(
             @NotEmpty(message = "text cannot be empty") String text) {
-        if (text.getBytes().length > stickeeConfig.getNoteMaxSize().toBytes()) {
+        if (text.getBytes().length > stickeeConfig.getNotesMaxSize().toBytes()) {
             throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE,
-                    "the max size of a note is " + stickeeConfig.getNoteMaxSize().toString());
+                    "the max size of a note is " + stickeeConfig.getNotesMaxSize().toString());
         }
 
         var id = noteService.create(Note.builder().text(text).build())

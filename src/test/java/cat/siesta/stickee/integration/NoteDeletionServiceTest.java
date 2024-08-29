@@ -30,7 +30,7 @@ public class NoteDeletionServiceTest {
 
     @Test
     void shouldDeleteExpiredNotes() {
-        var expiredDate = LocalDateTime.now().minus(stickeeConfig.getNoteMaxAge());
+        var expiredDate = LocalDateTime.now().minus(stickeeConfig.getNotesMaxAge());
         var notes = List.of(
                 NoteStub.builder().build(),
                 NoteStub.builder().creationTimestamp(expiredDate.minusHours(1)).build(),

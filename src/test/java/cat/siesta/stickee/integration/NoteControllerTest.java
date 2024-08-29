@@ -24,7 +24,7 @@ import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import jakarta.annotation.PostConstruct;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = { "note-max-size=1KB" })
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = { "notes-max-size=1KB" })
 public class NoteControllerTest {
 
     private Note noteHello = Note.builder().text("Hello world!").build();
@@ -109,7 +109,7 @@ public class NoteControllerTest {
         var marginSeconds = 5;
 
         var noteId = noteService.create(noteHello).getId().orElseThrow();
-        var expectedCache = stickeeConfig.getNoteMaxAge().toSeconds();
+        var expectedCache = stickeeConfig.getNotesMaxAge().toSeconds();
         Stream<String> validRange = IntStream.range(-marginSeconds, marginSeconds)
                 .mapToObj(margin -> "max-age=" + (expectedCache + margin) + ", public, immutable");
 
@@ -121,7 +121,7 @@ public class NoteControllerTest {
 
     @Test
     void shouldGetPayloadTooLargeOnBigNote() {
-        var text = RandomStringUtils.randomAscii((int) stickeeConfig.getNoteMaxSize().toBytes() + 1);
+        var text = RandomStringUtils.randomAscii((int) stickeeConfig.getNotesMaxSize().toBytes() + 1);
 
         given().param("text", text)
                 .post(stickeeConfig.getNotesBasePath() + "/create").then().assertThat()

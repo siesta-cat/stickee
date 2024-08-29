@@ -24,10 +24,10 @@ public class NoteDeletionService {
     @Autowired
     private NoteRepository noteRepository;
 
-    @Scheduled(fixedDelayString = "${note-deletion-delay}", timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedDelayString = "${notes-deletion-delay}", timeUnit = TimeUnit.SECONDS)
     @Transactional
     public long deleteExpiredNotes() {
-        var expiredDate = LocalDateTime.now().minus(stickeeConfig.getNoteMaxAge());
+        var expiredDate = LocalDateTime.now().minus(stickeeConfig.getNotesMaxAge());
         var deletedNotesCount = noteRepository.deleteAllByCreationTimestampBefore(expiredDate);
         if (deletedNotesCount > 0L) {
             log.info("{} notes were deleted", deletedNotesCount);

@@ -1,4 +1,4 @@
 notes-base-path: notes
-note-max-age: 7d
-note-max-size: 200MB
-note-deletion-delay: 60
+notes-max-age: 7d
+notes-max-size: 200MB
+notes-deletion-delay: 60

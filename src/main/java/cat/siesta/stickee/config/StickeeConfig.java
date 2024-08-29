@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 public class StickeeConfig {
     private String notesBasePath;
-    private Duration noteMaxAge;
-    private Long noteDeletionDelay;
-    private DataSize noteMaxSize;
+    private Duration notesMaxAge;
+    private Long notesDeletionDelay;
+    private DataSize notesMaxSize;
 }
