@@ -1,4 +1,4 @@
-name: Automated tests ✅
+name: Tests 🧪
 
 on:
   push:
