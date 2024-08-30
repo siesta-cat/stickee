@@ -58,12 +58,9 @@ jobs:
     steps:
       - name: Pull deployment repo
         run: git clone https://username:${{ secrets.ARGO_TOKEN }}@git.fai.st/bizcochito/k8s
-      - name: Cd into repo
-        run: cd k8s/stickee
-      - run: ls -Rl
       - name: Update version
-        run: sed -i s/stickee:.*/stickee:${{ github.ref_name }}/g stickee.yaml
+        run: sed -i s/stickee:.*/stickee:${{ github.ref_name }}/g k8s/stickeestickee.yaml
       - name: Commit
-        run: git commit -m "Automated update to stickee version ${{ github.ref_name }}"
+        run: cd k8s && git commit -m "Automated update to stickee version ${{ github.ref_name }}"
       - name: Push
-        run: git push
+        run: cd k8s && git push
