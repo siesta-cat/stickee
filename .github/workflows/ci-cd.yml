@@ -54,7 +54,7 @@ jobs:
   cd:
     name: Deploy 🦑
     runs-on: ubuntu-latest
-    #needs: ci
+    needs: ci
     steps:
       - name: Pull deployment repo
         run: git clone https://username:${{ secrets.ARGO_TOKEN }}@git.fai.st/bizcochito/k8s
