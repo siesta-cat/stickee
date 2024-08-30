@@ -60,6 +60,8 @@ jobs:
         run: git clone https://username:${{ secrets.ARGO_TOKEN }}@git.fai.st/bizcochito/k8s
       - name: Update version
         run: sed -i s/stickee:.*/stickee:${{ github.ref_name }}/g k8s/stickee/stickee.yaml
+      - name: Git setup
+        run: git config --global user.email "stickee@siesta.cat" && git config --global user.name "GitHub"
       - name: Commit
         run: cd k8s && git commit -m "Automated update to stickee version ${{ github.ref_name }}"
       - name: Push
