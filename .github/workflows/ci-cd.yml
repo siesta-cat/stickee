@@ -1,0 +1,66 @@
+name: CI/CD
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  ci:
+    name: Build and Push 🚀
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔽 Checkout
+        uses: actions/checkout@v3
+      - name: 🔧 Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          # list of Docker images to use as base name for tags
+          images: ghcr.io/suguis/stickee
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=raw,value=latest
+            type=semver,pattern={{raw}}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+      - name: Set up Docker Context for Buildx
+        id: buildx-context
+        continue-on-error: true
+        run: |
+          docker context create builders
+      - name: 🔧 Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          endpoint: builders
+      - name: 🪵 Login to docker registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🏗️ Build and Push ⏫
+        uses: docker/build-push-action@v4
+        with:
+          platforms: linux/amd64,linux/arm64
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+  cd:
+    name: Deploy 🦑
+    runs-on: ubuntu-latest
+    needs: ci
+    steps:
+      - name: Pull deployment repo
+        run: git clone https://username:${{ secrets.ARGO_TOKEN }}@git.fai.st/bizcochito/k8s
+      - name: Update version
+        run: sed -i s/stickee:.*/stickee:${{ github.ref_name }}/g k8s/stickee/stickee.yaml
+      - name: Git setup
+        run: git config --global user.email "stickee@siesta.cat" && git config --global user.name "GitHub"
+      - name: Commit
+        run: cd k8s && git commit -am "Automated update to stickee version ${{ github.ref_name }}"
+      - name: Push
+        run: cd k8s && git push
