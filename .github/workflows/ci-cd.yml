@@ -60,7 +60,7 @@ jobs:
         run: git clone https://username:${{ secrets.ARGO_TOKEN }}@git.fai.st/bizcochito/k8s
       - name: Cd into repo
         run: cd k8s
-      - run: ls -R
+      - run: ls -Rl
       - name: Update version
         run: sed -i s/stickee:.*/stickee:${{ github.ref_name }}/g stickee/stickee.yaml
       - name: Commit
