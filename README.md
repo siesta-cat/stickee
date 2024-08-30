@@ -1,5 +1,7 @@
 # Stickee
 
+[![Tests 🧪](https://github.com/Suguis/stickee/actions/workflows/tests.yml/badge.svg)](https://github.com/Suguis/stickee/actions/workflows/tests.yml)
+
 > [!NOTE]
 > We are still working on the development of a minimal product. There is no release yet.
 
