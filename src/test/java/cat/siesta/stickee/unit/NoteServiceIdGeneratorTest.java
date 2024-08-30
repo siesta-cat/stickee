@@ -16,13 +16,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 
 import cat.siesta.stickee.persistence.NoteRepository;
 import cat.siesta.stickee.service.NoteIdGeneratorService;
 import cat.siesta.stickee.service.NoteService;
 import cat.siesta.stickee.utils.NoteStub;
 
-@SpringBootTest(properties = "scheduling.enabled=false")
+@ActiveProfiles("test")
+@SpringBootTest
 public class NoteServiceIdGeneratorTest {
 
     @Autowired

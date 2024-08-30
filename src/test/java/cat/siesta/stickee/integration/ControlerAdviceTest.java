@@ -11,12 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 
 import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.service.NoteService;
 import io.restassured.RestAssured;
 import jakarta.annotation.PostConstruct;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ControlerAdviceTest {
 

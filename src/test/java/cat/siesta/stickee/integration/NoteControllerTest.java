@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
 
 import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.persistence.Note;
@@ -24,6 +25,7 @@ import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
 import jakarta.annotation.PostConstruct;
 
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = { "notes.max-size=1KB" })
 public class NoteControllerTest {
 
