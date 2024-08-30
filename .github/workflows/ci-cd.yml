@@ -24,7 +24,9 @@ jobs:
           # generate Docker tags based on the following events/attributes
           tags: |
             type=raw,value=latest
-            type=semver,pattern={{raw}}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
       - name: Set up Docker Context for Buildx
         id: buildx-context
         continue-on-error: true
@@ -43,7 +45,7 @@ jobs:
       - name: 🏗️ Build and Push ⏫
         uses: docker/build-push-action@v4
         with:
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
