@@ -24,6 +24,7 @@ jobs:
           # generate Docker tags based on the following events/attributes
           tags: |
             type=raw,value=latest
+            type=semver,pattern={{raw}}
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
@@ -50,3 +51,19 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+  cd:
+    name: Deploy 🦑
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo '${{ github.ref }}'
+      - name: Pull deployment repo
+        run: git clone https://username:${{ secrets.ARGO_TOKEN }}@git.fai.st/bizcochito/k8s
+      - name: Cd into repo
+        run: cd k8s
+      - name: Update version
+        run: sed -i s/stickee:.*/stickee:${{ github.ref }}/g stickee/stickee.yaml
+      - name: Commit
+        run: git commit -m "Automated update to stickee version ${{ github.ref }}"
+      - name: Push
+        run: git push
