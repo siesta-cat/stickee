@@ -63,6 +63,6 @@ jobs:
       - name: Git setup
         run: git config --global user.email "stickee@siesta.cat" && git config --global user.name "GitHub"
       - name: Commit
-        run: cd k8s && git commit -m "Automated update to stickee version ${{ github.ref_name }}"
+        run: cd k8s && git commit -am "Automated update to stickee version ${{ github.ref_name }}"
       - name: Push
         run: cd k8s && git push
