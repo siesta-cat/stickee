@@ -70,7 +70,7 @@ jobs:
       - name: Update version
         run: |
           sed -i s/stickee:.*/stickee:${{ needs.tag.outputs.tag }}/g k8s/stickee/stickee.yaml
-          sed -iE 's/stickee:v(.*)/stickee:\1/g' k8s/stickee/stickee.yaml
+          sed -i -E 's/stickee:v(.*)/stickee:\1/g' k8s/stickee/stickee.yaml
       - name: Git setup
         run: git config --global user.email "stickee@siesta.cat" && git config --global user.name "GitHub"
       - name: Commit
