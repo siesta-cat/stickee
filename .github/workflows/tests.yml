@@ -33,3 +33,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: gh workflow run ci-cd.yml --ref ${{ steps.tag_version.outputs.new_tag }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
