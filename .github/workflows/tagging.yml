@@ -1,0 +1,19 @@
+name: Version and Tag
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  tag:
+    name: Tag 🏷️
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔽 Checkout
+        uses: actions/checkout@v3
+      - name: ⏫ Bump version and push tag
+        uses: laputansoft/github-tag-action@v4.6
+        with:
+          github_token: ${{ env.github-token }}
