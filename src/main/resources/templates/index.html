@@ -29,10 +29,13 @@
         <button class="m-4 btn btn-primary" type="submit">Submit</button>
       </form>
     </section>
-    <footer class="align-self-center w-100 bg-secondary d-flex">
+    <footer
+      class="align-self-center justify-content-between w-100 bg-secondary d-flex"
+    >
       <a href="https://github.com/Suguis/stickee"
         ><p class="btn btn-secondary m-0">Source code</p></a
       >
+      <p class="mx-2 my-auto v-100" th:text="${version}"></p>
     </footer>
   </body>
 </html>
