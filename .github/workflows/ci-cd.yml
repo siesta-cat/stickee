@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Set version on project
         run: |
-          sed -i 's/version=(.*)/version=${{ needs.tag.outputs.tag }}/g' src/main/resources/stickee.properties
+          sed -i 's/version=.*/version=${{ needs.tag.outputs.tag }}/g' src/main/resources/stickee.properties
       - name: 🔧 Docker meta
         id: meta
         uses: docker/metadata-action@v4
