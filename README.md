@@ -1,6 +1,7 @@
 # Stickee
 
 [![Tests 🧪](https://github.com/Suguis/stickee/actions/workflows/tests.yml/badge.svg)](https://github.com/Suguis/stickee/actions/workflows/tests.yml)
+![GitHub Tag](https://img.shields.io/github/v/tag/Suguis/stickee?label=version)
 
 > [!NOTE]
 > We are still working on the development of a minimal product. There is no release yet.
