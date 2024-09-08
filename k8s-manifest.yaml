@@ -1,0 +1,170 @@
+# We use this secret both on the app and the db to connect
+apiVersion: v1
+stringData:
+  username: YOURUSERNAME
+  password: YOURPASSWORD
+kind: Secret
+metadata:
+  name: postgres-creds
+  namespace: stickee
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-volume-claim
+  namespace: stickee
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi # You can use more, but stickee being ephimeral we chose with this small storage.
+---
+apiVersion: apps/v1
+kind: StatefulSet # You can also use a dedicated postgres, however we like everything on our k8s.
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+  namespace: stickee
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  serviceName: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - image: postgres:16
+          name: postgres
+          resources:
+            requests:
+              cpu: 100m
+              memory: 200M
+            limits:
+              cpu: 100m
+              memory: 200M
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-data
+          env:
+            - name: POSTGRES_DB
+              value: stickee
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: password
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-volume-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+  namespace: stickee
+spec:
+  ports:
+    - port: 5432
+      protocol: TCP
+      targetPort: 5432
+  selector:
+    app: postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stickee
+  namespace: stickee
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stickee
+  template:
+    metadata:
+      labels:
+        app: stickee
+    spec:
+      containers:
+        - name: stickee
+          image: ghcr.io/suguis/stickee:latest
+          resources:
+            requests:
+              cpu: 100m
+              memory: 300M
+            limits:
+              cpu: 1000m # This is to speed up boot time
+              memory: 300M
+          ports:
+            - containerPort: 8080
+          readinessProbe: # We only use readyness proves because in case of catastrofic failure spring crashes and reboots
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 30
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          env:
+            - name: JDBC_URL
+              value: jdbc:postgresql://postgres:5432/stickee # In case you use a dedicated postgres you will need to change this to the necesary jdbc url.
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stickee
+  namespace: stickee
+spec:
+  type: ClusterIP # Or you can use: Nodeport
+  selector:
+    app: stickee
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      # nodePort: 30080
+### You can expose this via nodeport or ingress, for example like this:
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: stickee-ingress
+#   labels:
+#     name: stickee-ingress
+# spec:
+#   ingressClassName: nginx
+#   rules:
+#     - host: stickee.example.com
+#       http:
+#         paths:
+#           - pathType: Prefix
+#             path: "/"
+#             backend:
+#               service:
+#                 name: stickee
+#                 port:
+#                   number: 8080
