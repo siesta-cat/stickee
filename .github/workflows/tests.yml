@@ -3,12 +3,11 @@ name: Tests 🧪
 on:
   push:
     branches: ["main"]
-    paths-ignore:
-      - .github/workflows/*
-      - k8s-manifest.yaml
-      - example-compose.yaml
-      - "*.md"
-      - .gitignore
+    paths:
+      - src/**
+      - pom.xml
+      - compose.yaml
+      - DOCKERFILE
       - .dockerignore
   pull_request:
     branches: ["main"]
