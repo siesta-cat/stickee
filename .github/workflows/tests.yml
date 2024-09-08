@@ -7,7 +7,7 @@ on:
       - src/**
       - pom.xml
       - compose.yaml
-      - DOCKERFILE
+      - Dockerfile
       - .dockerignore
   pull_request:
     branches: ["main"]
