@@ -8,6 +8,6 @@ public class NoteStub {
 
     public static Note.NoteBuilder builder() {
         return Note.builder()
-                .text(RandomStringUtils.random(20));
+                .text(RandomStringUtils.insecure().next(20));
     }
 }

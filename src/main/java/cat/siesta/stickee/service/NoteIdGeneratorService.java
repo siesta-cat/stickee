@@ -27,7 +27,7 @@ public class NoteIdGeneratorService {
     }
 
     private String generateSingleId() {
-        var id = RandomStringUtils.randomAlphanumeric(ID_LENGTH);
+        var id = RandomStringUtils.insecure().nextAlphanumeric(ID_LENGTH);
         log.debug("Generated id {}", id);
         return id;
     }
