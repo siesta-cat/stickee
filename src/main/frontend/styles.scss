@@ -5,7 +5,6 @@
 
 $stickee-colors: (
   primary: $purple,
-  secondary: $purple-100
 );
 
 $theme-colors: map.merge($theme-colors, $stickee-colors);

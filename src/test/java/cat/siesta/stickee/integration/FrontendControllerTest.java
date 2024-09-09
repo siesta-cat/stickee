@@ -38,4 +38,11 @@ public class FrontendControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .contentType("text/css");
     }
+
+    @Test
+    public void testJs() throws Exception {
+        given().get("/color-modes.js").then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .contentType("text/javascript");
+    }
 }

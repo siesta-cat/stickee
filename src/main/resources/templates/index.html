@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,9 +7,9 @@
     <link rel="stylesheet" th:href="@{/main.css}" />
   </head>
   <body class="min-vh-100 d-flex flex-column">
-    <nav class="navbar bg-primary" data-bs-theme="dark">
+    <nav class="navbar bg-primary">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Stickee</a>
+        <a class="navbar-brand text-light" href="#">Stickee</a>
       </div>
     </nav>
     <section class="container flex-fill text-center">
@@ -30,12 +30,13 @@
       </form>
     </section>
     <footer
-      class="align-self-center justify-content-between w-100 bg-secondary d-flex"
+      class="align-self-center justify-content-between w-100 bg-primary d-flex"
     >
       <a href="https://github.com/Suguis/stickee"
-        ><p class="btn btn-secondary m-0">Source code</p></a
+        ><p class="btn btn-primary m-0">Source code</p></a
       >
-      <p class="mx-2 my-auto v-100" th:text="${version}"></p>
+      <p class="mx-2 my-auto v-100 text-light" th:text="${version}"></p>
     </footer>
+    <script th:src="@{/color-modes.js}"></script>
   </body>
 </html>
