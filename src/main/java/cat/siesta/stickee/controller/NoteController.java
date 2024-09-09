@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import cat.siesta.stickee.config.StickeeConfig;
-import cat.siesta.stickee.persistence.Note;
+import cat.siesta.stickee.persistence.NoteEntity;
 import cat.siesta.stickee.service.NoteService;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ public class NoteController {
                     "the max size of a note is " + stickeeConfig.getMaxSize().toString());
         }
 
-        var id = noteService.create(Note.builder().text(text).build())
+        var id = noteService.create(NoteEntity.builder().text(text).build())
                 .getId().orElseThrow().toString();
 
         log.info("Note created with id: {}", id);

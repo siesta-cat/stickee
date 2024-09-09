@@ -6,13 +6,13 @@ import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import cat.siesta.stickee.persistence.Note;
+import cat.siesta.stickee.persistence.NoteEntity;
 
 public class NoteTest {
 
     @Test
     void shouldCreateSameNoteWithGivenId() {
-        var note = new Note(null, "text", LocalDateTime.now());
+        var note = new NoteEntity(null, "text", LocalDateTime.now());
         var noteWithId = note.withId("123");
 
         assertEquals(note.getText(), note.getText());
