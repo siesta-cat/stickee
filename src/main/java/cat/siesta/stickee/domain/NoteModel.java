@@ -1,4 +1,4 @@
-package cat.siesta.stickee;
+package cat.siesta.stickee.domain;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

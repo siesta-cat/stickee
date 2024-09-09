@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import cat.siesta.stickee.NoteModel;
+import cat.siesta.stickee.domain.NoteModel;
 import cat.siesta.stickee.persistence.NoteEntity;
 
 public class NoteEntityMappingTest {
