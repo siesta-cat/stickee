@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import cat.siesta.stickee.config.StickeeConfig;
-import cat.siesta.stickee.persistence.Note;
+import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.service.NoteService;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.extern.slf4j.Slf4j;
@@ -36,18 +36,19 @@ public class NoteController {
     public ResponseEntity<String> getNote(@PathVariable("id") String id) {
         log.debug("Received request for note with id: {}", id);
 
-        var maybeNote = noteService.get(id);
-        var noteCreationDate = maybeNote.map(note -> note.getCreationTimestamp()).orElse(LocalDateTime.now());
+        var note = noteService.get(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "note not found"));
+
+        var noteCreationDate = note.getCreationTimestamp();
         var cacheMaxAge = Math.max(0, stickeeConfig.getMaxAge().toSeconds()
                 - ChronoUnit.SECONDS.between(noteCreationDate, LocalDateTime.now()));
         var cacheControl = CacheControl.maxAge(cacheMaxAge, TimeUnit.SECONDS).cachePublic().immutable();
 
-        return maybeNote.map(note -> ResponseEntity
+        return ResponseEntity
                 .status(HttpStatus.OK)
                 .cacheControl(cacheControl)
                 .header("Content-Type", "text/plain")
-                .body(note.getText()))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "note not found"));
+                .body(note.getText());
     }
 
     @PostMapping("/create")
@@ -59,7 +60,7 @@ public class NoteController {
         }
 
         var id = noteService.create(Note.builder().text(text).build())
-                .getId().orElseThrow().toString();
+                .getMaybeId().orElseThrow().toString();
 
         log.info("Note created with id: {}", id);
 

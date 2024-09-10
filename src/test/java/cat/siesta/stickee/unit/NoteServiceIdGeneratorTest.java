@@ -42,6 +42,7 @@ public class NoteServiceIdGeneratorTest {
 
         given(noteRepository.existsById(anyString()))
                 .willReturn(true).willReturn(false);
+        given(noteRepository.save(any())).willAnswer(inv -> inv.getArgument(0));
         noteService.create(noteToInsert);
 
         verify(noteRepository, times(2)).existsById(anyString());

@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
 import cat.siesta.stickee.config.StickeeConfig;
-import cat.siesta.stickee.persistence.Note;
+import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.service.NoteService;
 import io.restassured.RestAssured;
 import io.restassured.parsing.Parser;
@@ -51,8 +51,8 @@ public class NoteControllerTest {
 
     @Test
     void shouldGetWhenExisting() {
-        String noteHelloId = noteService.create(noteHello).getId().orElseThrow();
-        String noteByeId = noteService.create(noteBye).getId().orElseThrow();
+        String noteHelloId = noteService.create(noteHello).getMaybeId().orElseThrow();
+        String noteByeId = noteService.create(noteBye).getMaybeId().orElseThrow();
 
         given().get(stickeeConfig.getBasePath() + "/" + noteHelloId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
@@ -67,8 +67,8 @@ public class NoteControllerTest {
 
     @Test
     void shouldAlwaysReturnPlainText() {
-        String noteHtmlId = noteService.create(noteHtml).getId().orElseThrow();
-        String noteJsonId = noteService.create(noteJson).getId().orElseThrow();
+        String noteHtmlId = noteService.create(noteHtml).getMaybeId().orElseThrow();
+        String noteJsonId = noteService.create(noteJson).getMaybeId().orElseThrow();
 
         given().header("Accept", "text/html")
                 .given().get(stickeeConfig.getBasePath() + "/" + noteHtmlId).then()
@@ -111,7 +111,7 @@ public class NoteControllerTest {
     void shouldContainCacheHeadersOnGet() {
         var marginSeconds = 5;
 
-        var noteId = noteService.create(noteHello).getId().orElseThrow();
+        var noteId = noteService.create(noteHello).getMaybeId().orElseThrow();
         var expectedCache = stickeeConfig.getMaxAge().toSeconds();
         Stream<String> validRange = IntStream.range(-marginSeconds, marginSeconds)
                 .mapToObj(margin -> "max-age=" + (expectedCache + margin) + ", public, immutable");

@@ -2,7 +2,7 @@ package cat.siesta.stickee.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import cat.siesta.stickee.persistence.Note;
+import cat.siesta.stickee.domain.Note;
 
 public class NoteStub {
 
