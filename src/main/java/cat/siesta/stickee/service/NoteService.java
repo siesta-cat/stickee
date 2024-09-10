@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.persistence.NoteEntity;
 import cat.siesta.stickee.persistence.NoteRepository;
 
@@ -17,13 +18,14 @@ public class NoteService {
     @Autowired
     private NoteRepository noteRepository;
 
-    public NoteEntity create(NoteEntity note) {
+    public Note create(Note note) {
         var id = idGeneratorService.generate();
         var noteWithId = note.withId(id);
-        return noteRepository.save(noteWithId);
+        var entity = noteRepository.save(NoteEntity.fromModel(noteWithId));
+        return entity.toModel();
     }
 
-    public Optional<NoteEntity> get(String id) {
-        return noteRepository.findById(id);
+    public Optional<Note> get(String id) {
+        return noteRepository.findById(id).map(NoteEntity::toModel);
     }
 }
