@@ -11,7 +11,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   stickee:
-    image: ghcr.io/suguis/stickee:latest
+    image: ghcr.io/siesta-cat/stickee:latest
     ports:
       - 8080:8080
     environment:
