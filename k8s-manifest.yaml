@@ -101,7 +101,7 @@ spec:
     spec:
       containers:
         - name: stickee
-          image: ghcr.io/suguis/stickee:latest
+          image: ghcr.io/siesta-cat/stickee:latest
           resources:
             requests:
               cpu: 100m
