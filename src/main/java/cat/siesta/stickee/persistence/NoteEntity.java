@@ -1,18 +1,14 @@
 package cat.siesta.stickee.persistence;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import cat.siesta.stickee.domain.Note;
-import cat.siesta.stickee.domain.NoteTimestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,7 +20,7 @@ import lombok.ToString;
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class NoteEntity {
 
     @Id
@@ -43,13 +39,4 @@ public class NoteEntity {
     @ColumnDefault("'PLAIN'")
     private TextCipher textCipher;
 
-    public static NoteEntity fromModel(Note note) {
-        return new NoteEntity(note.getMaybeId().orElse(null), note.getText(), note.getCreationTimestamp(),
-                TextCipher.PLAIN);
-    }
-
-    public Note toModel() {
-        return new Note(Optional.ofNullable(this.getId()), this.getText(),
-                new NoteTimestamp(this.getCreationTimestamp()));
-    }
 }
