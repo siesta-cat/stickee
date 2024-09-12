@@ -3,10 +3,14 @@ package cat.siesta.stickee.persistence;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.domain.NoteTimestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,8 +36,16 @@ public class NoteEntity {
     @Column(nullable = false)
     private LocalDateTime creationTimestamp;
 
+    // The "PLAIN" column default is to maintain compatibility with older versions
+    // that use the plain encoding. It will be removed on a breaking changes update
+    @Column(columnDefinition = "VARCHAR(16)", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @ColumnDefault("'PLAIN'")
+    private TextCipher textCipher;
+
     public static NoteEntity fromModel(Note note) {
-        return new NoteEntity(note.getMaybeId().orElse(null), note.getText(), note.getCreationTimestamp());
+        return new NoteEntity(note.getMaybeId().orElse(null), note.getText(), note.getCreationTimestamp(),
+                TextCipher.PLAIN);
     }
 
     public Note toModel() {
