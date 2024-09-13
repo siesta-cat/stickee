@@ -3,6 +3,7 @@ package cat.siesta.stickee.config;
 import java.time.Duration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.util.unit.DataSize;
@@ -20,4 +21,10 @@ public class StickeeConfig {
     private Duration maxAge;
     private Long deletionDelay;
     private DataSize maxSize;
+    private String dbEncryptionKey;
+
+    @Bean
+    public String dbEncryptionKey() {
+        return dbEncryptionKey;
+    }
 }
