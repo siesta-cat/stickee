@@ -4,9 +4,10 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: YOURUSERNAME
-      POSTGRES_PASSWORD: YOURPASSWORD
-      POSTGRES_DB: stickee
+      # The name of your stickee database, its username, and password
+      POSTGRES_DB: your_database_name
+      POSTGRES_USER: your_username
+      POSTGRES_PASSWORD: your_password
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
@@ -15,9 +16,15 @@ services:
     ports:
       - 8080:8080
     environment:
-      JDBC_URL: jdbc:postgresql://postgres:5432/stickee # In case you use a dedicated postgres you will need to change this to the necesary jdbc url.
-      DB_USERNAME: YOURUSERNAME
-      DB_PASSWORD: YOURPASSWORD
+      # In case you use a dedicated postgres you will need to change this to the necesary jdbc url.
+      JDBC_URL: jdbc:postgresql://postgres:5432/stickee
+
+      # The username and password of your stickee database in postgres
+      DB_USERNAME: your_username
+      DB_PASSWORD: your_password
+
+      # This key is used to encrypt and decrypt the notes in the database. It can be any ASCII string
+      NOTES_DB_ENCRYPTION_KEY: your_key
 
 volumes:
   postgres-data:

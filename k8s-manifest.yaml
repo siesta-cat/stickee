@@ -1,8 +1,9 @@
 # We use this secret both on the app and the db to connect
 apiVersion: v1
 stringData:
-  username: YOURUSERNAME
-  password: YOURPASSWORD
+  # The username and password of your stickee database in postgres
+  username: your_username
+  password: your_password
 kind: Secret
 metadata:
   name: postgres-creds
@@ -18,7 +19,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi # You can use more, but stickee being ephimeral we chose with this small storage.
+      storage: 2Gi # You can use more, but stickee being ephemeral we chose with this small storage.
 ---
 apiVersion: apps/v1
 kind: StatefulSet # You can also use a dedicated postgres, however we like everything on our k8s.
@@ -107,11 +108,13 @@ spec:
               cpu: 100m
               memory: 300M
             limits:
-              cpu: 1000m # This is to speed up boot time
+              cpu: 1000m # This is to speed up boot time, it uses way less than that on idle
               memory: 300M
           ports:
             - containerPort: 8080
-          readinessProbe: # We only use readyness proves because in case of catastrofic failure spring crashes and reboots
+
+          # We only use readiness probes because in case of catastrofic failure Spring crashes and reboots
+          readinessProbe:
             httpGet:
               path: /
               port: 8080
@@ -121,10 +124,14 @@ spec:
             successThreshold: 1
             failureThreshold: 5
           env:
+            # This key is used to encrypt and decrypt the notes in the database. It can be any ASCII string
             - name: NOTES_DB_ENCRYPTION_KEY
-              value: STRONGPASSWORDGOESHERE # This key will be used to encrypt the data at rest on the DB
+              value: your_key
+
+            # In case you use a dedicated postgres you will need to change this to the necesary jdbc url.
             - name: JDBC_URL
-              value: jdbc:postgresql://postgres:5432/stickee # In case you use a dedicated postgres you will need to change this to the necesary jdbc url.
+              value: jdbc:postgresql://postgres:5432/stickee
+
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
