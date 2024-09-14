@@ -54,8 +54,10 @@ public class NoteDeletionServiceTest {
         var deletedEntities = noteDeletionService.deleteExpiredNotes();
 
         assertEquals(2, deletedEntities);
-        assertTrue(expectedExpiredNotes.allMatch(note -> noteService.get(note.getMaybeId().get()).isEmpty()));
-        assertTrue(expectedFreshNotes.allMatch(note -> noteService.get(note.getMaybeId().get()).isPresent()));
+        assertTrue(expectedExpiredNotes
+                .allMatch(note -> noteService.get(note.getMaybeId().get().getId()).isEmpty()));
+        assertTrue(expectedFreshNotes
+                .allMatch(note -> noteService.get(note.getMaybeId().get().getId()).isPresent()));
     }
 
 }

@@ -60,7 +60,7 @@ public class NoteController {
         }
 
         var id = noteService.create(Note.builder().text(text).build())
-                .getMaybeId().orElseThrow().toString();
+                .getMaybeId().orElseThrow();
 
         log.info("Note created with id: {}", id);
 

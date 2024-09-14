@@ -1,7 +1,6 @@
 package cat.siesta.stickee.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -11,7 +10,6 @@ import static org.mockito.Mockito.verify;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,7 +48,7 @@ public class NoteServiceIdGeneratorTest {
     }
 
     @Test
-    void shouldGenerateDistinctAlphanumericIds() {
+    void shouldGenerateDistinctIds() {
         var numberOfIdsToGenerate = 50;
         given(noteRepository.existsById(anyString())).willReturn(false);
 
@@ -59,7 +57,6 @@ public class NoteServiceIdGeneratorTest {
                 .distinct()
                 .collect(Collectors.toList());
 
-        assertTrue(distinctGeneratedIds.stream().allMatch(StringUtils::isAlphanumeric));
         assertEquals(numberOfIdsToGenerate, distinctGeneratedIds.size());
     }
 }

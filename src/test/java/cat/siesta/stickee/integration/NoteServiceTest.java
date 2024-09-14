@@ -22,7 +22,7 @@ public class NoteServiceTest {
     void shouldCreateAndGet() {
         var note = noteService.create(NoteStub.builder().build());
 
-        var result = noteService.get(note.getMaybeId().get());
+        var result = noteService.get(note.getMaybeId().get().getId());
 
         assertTrue(result.isPresent());
         assertEquals(note, result.get());

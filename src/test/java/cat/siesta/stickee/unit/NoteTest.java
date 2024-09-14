@@ -8,17 +8,19 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 
 import cat.siesta.stickee.domain.Note;
+import cat.siesta.stickee.domain.NoteId;
 import cat.siesta.stickee.domain.NoteTimestamp;
 
 public class NoteTest {
 
     @Test
     void shouldCreateSameNoteWithGivenId() {
+        var noteId = NoteId.generate();
         var note = new Note(Optional.empty(), "text", new NoteTimestamp(LocalDateTime.now()));
-        var noteWithId = note.withId("123");
+        var noteWithId = note.withId(noteId);
 
         assertEquals(note.getText(), note.getText());
         assertEquals(note.getCreationTimestamp(), note.getCreationTimestamp());
-        assertEquals(noteWithId.getMaybeId().get(), "123");
+        assertEquals(noteWithId.getMaybeId().get(), noteId);
     }
 }

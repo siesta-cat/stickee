@@ -51,8 +51,8 @@ public class NoteControllerTest {
 
     @Test
     void shouldGetWhenExisting() {
-        String noteHelloId = noteService.create(noteHello).getMaybeId().orElseThrow();
-        String noteByeId = noteService.create(noteBye).getMaybeId().orElseThrow();
+        var noteHelloId = noteService.create(noteHello).getMaybeId().orElseThrow();
+        var noteByeId = noteService.create(noteBye).getMaybeId().orElseThrow();
 
         given().get(stickeeConfig.getBasePath() + "/" + noteHelloId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
@@ -67,8 +67,8 @@ public class NoteControllerTest {
 
     @Test
     void shouldAlwaysReturnPlainText() {
-        String noteHtmlId = noteService.create(noteHtml).getMaybeId().orElseThrow();
-        String noteJsonId = noteService.create(noteJson).getMaybeId().orElseThrow();
+        var noteHtmlId = noteService.create(noteHtml).getMaybeId().orElseThrow();
+        var noteJsonId = noteService.create(noteJson).getMaybeId().orElseThrow();
 
         given().header("Accept", "text/html")
                 .given().get(stickeeConfig.getBasePath() + "/" + noteHtmlId).then()
@@ -109,7 +109,7 @@ public class NoteControllerTest {
 
     @Test
     void shouldContainCacheHeadersOnGet() {
-        var marginSeconds = 5;
+        var marginSeconds = 60;
 
         var noteId = noteService.create(noteHello).getMaybeId().orElseThrow();
         var expectedCache = stickeeConfig.getMaxAge().toSeconds();

@@ -22,7 +22,7 @@ public class Note {
 
     @Default
     @With(value = AccessLevel.PRIVATE)
-    private Optional<String> maybeId = Optional.empty();
+    private Optional<NoteId> maybeId = Optional.empty();
 
     @NotEmpty(message = "text cannot be empty")
     private String text;
@@ -30,7 +30,7 @@ public class Note {
     @Default
     private NoteTimestamp creationTimestamp = new NoteTimestamp(LocalDateTime.now());
 
-    public Note withId(String id) {
+    public Note withId(NoteId id) {
         return this.withMaybeId(Optional.of(id));
     }
 
