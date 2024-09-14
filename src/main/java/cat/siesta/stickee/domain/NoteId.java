@@ -17,10 +17,29 @@ public class NoteId {
     public static final int ID_LENGTH = 5;
 
     public NoteId(String id) {
-        if (!isValid(id)) {
+        this(id, true);
+    }
+
+    private NoteId(String id, boolean shouldValidate) {
+        if (shouldValidate && !isValid(id)) {
             throw new IllegalArgumentException("id doesn't follow the specification");
         }
         this.id = id;
+    }
+
+    /**
+     * Allows the creation of note ids without validation, used to
+     * maintain compatibility with previous versions of the application.
+     * 
+     * The use of this method should be strictly to maintain this compatibility,
+     * and will be removed in future updates.
+     * 
+     * @param id the id of the note, that can be invalid.
+     * @return an unvalidated NoteId.
+     */
+    public static NoteId createWithoutValidation(String id) {
+        var noteId = new NoteId(id, false);
+        return noteId;
     }
 
     /**

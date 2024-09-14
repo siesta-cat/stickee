@@ -33,7 +33,7 @@ public class NoteEntityMapper {
             case AES256 -> encryptor.decrypt(entity.getText());
         };
 
-        return new Note(Optional.ofNullable(new NoteId(entity.getId())), decryptedText,
+        return new Note(Optional.ofNullable(NoteId.createWithoutValidation(entity.getId())), decryptedText,
                 new NoteTimestamp(entity.getCreationTimestamp()));
     }
 }
