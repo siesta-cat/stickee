@@ -1,12 +1,10 @@
 package cat.siesta.stickee.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +55,6 @@ public class NoteServiceTest {
         noteRepository.save(entity);
 
         assertThrows(IllegalArgumentException.class, () -> new NoteId(invalidId));
-        assertNotEquals(Optional.empty(), noteService.get(invalidId));
+        assertEquals(entity.getText(), noteService.get(invalidId).get().getText());
     }
 }
