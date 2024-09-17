@@ -1,7 +1,6 @@
 package cat.siesta.stickee.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -11,40 +10,31 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import cat.siesta.stickee.persistence.NoteRepository;
 import cat.siesta.stickee.service.NoteIdGeneratorService;
-import cat.siesta.stickee.service.NoteService;
-import cat.siesta.stickee.utils.NoteStub;
 
-@ActiveProfiles("test")
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class NoteServiceIdGeneratorTest {
 
-    @Autowired
-    private NoteService noteService;
-
-    @Autowired
-    private NoteIdGeneratorService generatorService;
-
-    @MockBean
+    @Mock
     private NoteRepository noteRepository;
+
+    @InjectMocks
+    private NoteIdGeneratorService generatorService;
 
     @Test
     void shouldRegenerateNewIdOnCollision() {
-        var noteToInsert = NoteStub.builder().build();
-
         given(noteRepository.existsById(anyString()))
                 .willReturn(true).willReturn(false);
-        given(noteRepository.save(any())).willAnswer(inv -> inv.getArgument(0));
-        noteService.create(noteToInsert);
+
+        generatorService.generate();
 
         verify(noteRepository, times(2)).existsById(anyString());
-        verify(noteRepository).save(any());
     }
 
     @Test

@@ -2,18 +2,18 @@ package cat.siesta.stickee.service;
 
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cat.siesta.stickee.domain.NoteId;
 import cat.siesta.stickee.persistence.NoteRepository;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class NoteIdGeneratorService {
 
-    @Autowired
     private NoteRepository noteRepository;
 
     public NoteId generate() {
