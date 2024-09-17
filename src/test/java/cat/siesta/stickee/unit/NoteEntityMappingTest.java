@@ -10,9 +10,6 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.domain.NoteId;
@@ -21,16 +18,11 @@ import cat.siesta.stickee.mapper.NoteEntityMapper;
 import cat.siesta.stickee.mapper.TextEncryptor;
 import cat.siesta.stickee.persistence.TextCipher;
 
-// TODO: refactor to not lauch a Spring Context
-@ActiveProfiles("test")
-@SpringBootTest
 public class NoteEntityMappingTest {
 
-    @Autowired
-    private NoteEntityMapper mapper;
-
-    @Autowired
-    private TextEncryptor encryptor;
+    private String key = RandomStringUtils.insecure().nextAscii(10);
+    private TextEncryptor encryptor = new TextEncryptor(key);
+    private NoteEntityMapper mapper = new NoteEntityMapper(encryptor);
 
     @Test
     void modelMapsToEntityAndBack() {

@@ -2,7 +2,6 @@ package cat.siesta.stickee.mapper;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cat.siesta.stickee.domain.Note;
@@ -10,11 +9,12 @@ import cat.siesta.stickee.domain.NoteId;
 import cat.siesta.stickee.domain.NoteTimestamp;
 import cat.siesta.stickee.persistence.NoteEntity;
 import cat.siesta.stickee.persistence.TextCipher;
+import lombok.AllArgsConstructor;
 
 @Component
+@AllArgsConstructor
 public class NoteEntityMapper {
 
-    @Autowired
     TextEncryptor encryptor;
 
     public NoteEntity fromModel(Note note) {
