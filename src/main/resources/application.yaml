@@ -9,6 +9,8 @@ spring:
     password: ${DB_PASSWORD}
   docker:
     compose:
+      stop:
+        command: down
       skip:
         in-tests: false
   jpa:
