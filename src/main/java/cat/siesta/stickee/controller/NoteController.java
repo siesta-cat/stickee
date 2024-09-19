@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,17 +18,16 @@ import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.service.NoteService;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@AllArgsConstructor
 @RequestMapping("${notes.base-path}")
 public class NoteController {
 
-    @Autowired
     private StickeeConfig stickeeConfig;
-
-    @Autowired
     private NoteService noteService;
 
     @GetMapping("/{id}")

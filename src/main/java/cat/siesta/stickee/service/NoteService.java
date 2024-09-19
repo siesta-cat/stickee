@@ -2,23 +2,19 @@ package cat.siesta.stickee.service;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.mapper.NoteEntityMapper;
 import cat.siesta.stickee.persistence.NoteRepository;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class NoteService {
 
-    @Autowired
     private NoteEntityMapper mapper;
-
-    @Autowired
     private NoteIdGeneratorService idGeneratorService;
-
-    @Autowired
     private NoteRepository noteRepository;
 
     public Note create(Note note) {
