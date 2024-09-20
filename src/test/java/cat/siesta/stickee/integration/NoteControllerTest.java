@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.charset.Charset;
 import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -21,11 +22,14 @@ import org.springframework.test.context.ActiveProfiles;
 import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.service.NoteService;
+import groovy.util.logging.Slf4j;
 import io.restassured.RestAssured;
+import io.restassured.config.EncoderConfig;
 import io.restassured.parsing.Parser;
 import jakarta.annotation.PostConstruct;
 
 @ActiveProfiles("test")
+@Slf4j
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = { "notes.max-size=1KB" })
 public class NoteControllerTest {
 
@@ -47,6 +51,8 @@ public class NoteControllerTest {
     void setUp() {
         RestAssured.port = port;
         RestAssured.registerParser("text/plain", Parser.TEXT);
+        RestAssured.config = RestAssured.config().encoderConfig(
+                EncoderConfig.encoderConfig().defaultContentCharset(Charset.defaultCharset()));
     }
 
     @Test
@@ -89,7 +95,23 @@ public class NoteControllerTest {
                 .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
-    // TODO: add a test for unicode text
+    @Test
+    void shouldCreateAndGetUnicode() {
+        var text = RandomStringUtils.insecure().next(10);
+
+        var response = given()
+                .param("text", text)
+                .post(stickeeConfig.getBasePath() + "/create").then().assertThat()
+                .statusCode(HttpStatus.FOUND.value())
+                .extract();
+
+        var location = response.header("Location");
+
+        given().get(location).then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body(equalTo(text));
+    }
+
     @Test
     void shouldCreateAndGet() {
         var text = "Posting!";
