@@ -150,6 +150,7 @@ public class NoteControllerTest {
                 .statusCode(HttpStatus.OK.value())
                 .body(equalTo(text));
 
+        // TODO: test with RestAssured.baseURI + Port
         assertTrue(body.contains("localhost:"));
     }
 
