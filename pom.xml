@@ -162,23 +162,23 @@
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
 					<execution>
-					<id>copy-bootstrap-icons-fonts</id>
-					<phase>process-resources</phase>
-					<goals>
-						<goal>copy-resources</goal>
-					</goals>
-					<configuration>
-						<outputDirectory>src/main/resources/static/bootstrap-icons</outputDirectory>
-						<resources>
-							<resource>
-								<directory>src/main/frontend/node_modules/bootstrap-icons/font</directory>
-								<includes>
-									<include>fonts/bootstrap-icons.*</include>
-									<include>bootstrap-icons.min.css</include>
-								</includes>
-							</resource>
-						</resources>
-					</configuration>
+						<id>copy-bootstrap-icons-fonts</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>src/main/resources/static/bootstrap-icons</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/frontend/node_modules/bootstrap-icons/font</directory>
+									<includes>
+										<include>fonts/bootstrap-icons.*</include>
+										<include>bootstrap-icons.min.css</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
