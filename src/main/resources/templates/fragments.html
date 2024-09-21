@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head th:fragment="head">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stickee</title>
+    <link rel="stylesheet" th:href="@{/main.css}" />
+  </head>
+  <body>
+    <nav th:fragment="header" class="navbar bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand text-light" href="#">Stickee</a>
+      </div>
+    </nav>
+    <footer
+      th:fragment="footer"
+      class="align-self-center justify-content-between w-100 bg-primary d-flex"
+    >
+      <a href="https://github.com/siesta-cat/stickee"
+        ><p class="btn btn-primary m-0">Source code</p></a
+      >
+      <p class="mx-2 my-auto v-100 text-light" th:text="${version}"></p>
+      <script th:src="@{/color-modes.js}"></script>
+    </footer>
+  </body>
+</html>

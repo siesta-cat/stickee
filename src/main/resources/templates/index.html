@@ -1,17 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stickee</title>
-    <link rel="stylesheet" th:href="@{/main.css}" />
-  </head>
+  <head th:replace="~{fragments :: head}"></head>
   <body class="min-vh-100 d-flex flex-column">
-    <nav class="navbar bg-primary">
-      <div class="container-fluid">
-        <a class="navbar-brand text-light" href="#">Stickee</a>
-      </div>
-    </nav>
+    <th:block th:replace="~{fragments :: header}"></th:block>
     <section class="container flex-fill text-center">
       <p class="fs-2 fw-light m-5">
         A simple and ephemeral text storage application
@@ -29,14 +20,6 @@
         <button class="m-4 btn btn-primary" type="submit">Submit</button>
       </form>
     </section>
-    <footer
-      class="align-self-center justify-content-between w-100 bg-primary d-flex"
-    >
-      <a href="https://github.com/siesta-cat/stickee"
-        ><p class="btn btn-primary m-0">Source code</p></a
-      >
-      <p class="mx-2 my-auto v-100 text-light" th:text="${version}"></p>
-    </footer>
-    <script th:src="@{/color-modes.js}"></script>
+    <th:block th:replace="~{fragments :: footer}"></th:block>
   </body>
 </html>
