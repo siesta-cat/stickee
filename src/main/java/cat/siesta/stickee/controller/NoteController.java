@@ -5,11 +5,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -51,6 +53,7 @@ public class NoteController {
 
     @PostMapping("/create")
     public ResponseEntity<String> postNote(
+            @RequestHeader(HttpHeaders.HOST) String host,
             @NotEmpty(message = "text cannot be empty") String text) {
         if (text.getBytes().length > stickeeConfig.getMaxSize().toBytes()) {
             throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE,
@@ -65,6 +68,6 @@ public class NoteController {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header("Location", "/" + stickeeConfig.getBasePath() + "/" + id)
-                .build();
+                .body(host + "/" + stickeeConfig.getBasePath() + "/" + id);
     }
 }

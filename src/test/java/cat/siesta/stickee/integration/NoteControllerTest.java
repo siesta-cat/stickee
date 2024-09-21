@@ -130,6 +130,30 @@ public class NoteControllerTest {
     }
 
     @Test
+    void locationHeaderAndBodySouldReturnSame() {
+        var text = "Posting!";
+
+        var response = given()
+                .param("text", text)
+                .post(stickeeConfig.getBasePath() + "/create").then().assertThat()
+                .statusCode(HttpStatus.FOUND.value())
+                .extract();
+
+        var location = response.header("Location");
+        var body = response.body().asString();
+
+        given().get(location).then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body(equalTo(text));
+
+        given().get("http://" + body).then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body(equalTo(text));
+
+        assertTrue(body.contains("localhost:"));
+    }
+
+    @Test
     void shouldContainCacheHeadersOnGet() {
         var marginSeconds = 60;
 
