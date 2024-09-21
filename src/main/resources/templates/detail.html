@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" data-bs-theme="auto">
+  <head th:replace="~{fragments :: head}"></head>
+  <body class="min-vh-100 d-flex flex-column">
+    <th:block th:replace="~{fragments :: header}"></th:block>
+    <section class="container flex-fill text-center">
+      <div class="m-4">
+        <i class="bi-calendar"></i> <span th:text="${creationTimestamp}"></span>
+      </div>
+      <textarea
+        readonly
+        rows="6"
+        class="form-control font-monospace my-4"
+        th:text="${noteText}"
+      ></textarea>
+    </section>
+    <th:block th:replace="~{fragments :: footer}"></th:block>
+  </body>
+</html>
