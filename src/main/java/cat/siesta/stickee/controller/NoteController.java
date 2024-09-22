@@ -67,7 +67,7 @@ public class NoteController {
 
         return ResponseEntity
                 .status(HttpStatus.FOUND)
-                .header("Location", "/" + stickeeConfig.getBasePath() + "/" + id)
+                .header("Location", "/" + stickeeConfig.getBasePath() + "/detail/" + id)
                 .body(host + "/" + stickeeConfig.getBasePath() + "/" + id);
     }
 }
