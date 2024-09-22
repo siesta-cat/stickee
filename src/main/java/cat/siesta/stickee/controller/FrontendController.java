@@ -42,8 +42,9 @@ public class FrontendController {
 			model.addAttribute("notesBasePath", stickeeConfig.getBasePath());
 			model.addAttribute("noteText", note.getText());
 			model.addAttribute("noteId", id);
-			model.addAttribute("creationTimestamp",
-					note.getCreationTimestamp().format(DateTimeFormatter.ofPattern("d MMM uuuu, HH:mm")));
+			model.addAttribute("expireTimestamp",
+					note.getCreationTimestamp().plus(stickeeConfig.getMaxAge())
+							.format(DateTimeFormatter.ofPattern("d MMM uuuu, HH:mm")));
 			return "detail";
 		}).orElseGet(() -> {
 			response.setStatus(HttpStatus.NOT_FOUND.value());

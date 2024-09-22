@@ -5,7 +5,8 @@
     <th:block th:replace="~{fragments :: header}"></th:block>
     <section class="container flex-fill text-center">
       <div class="m-4">
-        <i class="bi-calendar"></i> <span th:text="${creationTimestamp}"></span>
+        <i class="bi bi-hourglass-split"></i>
+        <span th:text="${expireTimestamp}"></span>
       </div>
       <textarea
         id="noteText"
