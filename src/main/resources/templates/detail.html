@@ -8,6 +8,7 @@
         <i class="bi-calendar"></i> <span th:text="${creationTimestamp}"></span>
       </div>
       <textarea
+        id="noteText"
         readonly
         rows="6"
         class="form-control font-monospace my-4"
@@ -16,7 +17,33 @@
       <a th:href="@{|/${notesBasePath}/raw/${noteId}|}"
         ><button class="btn btn-primary">Raw</button></a
       >
+      <button
+        id="copyButton"
+        onclick="addClipboard('noteText', 'copyButton', 'Copy', 'Copied!')"
+        class="btn btn-primary"
+      >
+        Copy
+      </button>
     </section>
     <th:block th:replace="~{fragments :: footer}"></th:block>
+    <script>
+      const ANIMATION_TIME = 1_500;
+      let timeout;
+      async function addClipboard(elementId, callerId, defaultValue, newValue) {
+        const textToCopy = document.getElementById(elementId).value;
+        const caller = document.getElementById(callerId);
+
+        await navigator.clipboard.writeText(textToCopy);
+        caller.innerText = newValue;
+
+        if (timeout) {
+          clearTimeout(timeout);
+        }
+
+        timeout = setTimeout(() => {
+          caller.innerText = defaultValue;
+        }, ANIMATION_TIME);
+      }
+    </script>
   </body>
 </html>
