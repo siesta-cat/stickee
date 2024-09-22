@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -72,6 +73,16 @@ public class NoteControllerTest {
     }
 
     @Test
+    void shouldGetFromRawPath() {
+        var noteHelloId = noteService.create(noteHello).getMaybeId().orElseThrow();
+
+        given().get(stickeeConfig.getBasePath() + "/raw/" + noteHelloId).then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body(equalTo("Hello world!"))
+                .contentType("text/plain");
+    }
+
+    @Test
     void shouldAlwaysReturnPlainText() {
         var noteHtmlId = noteService.create(noteHtml).getMaybeId().orElseThrow();
         var noteJsonId = noteService.create(noteJson).getMaybeId().orElseThrow();
@@ -109,7 +120,7 @@ public class NoteControllerTest {
 
         given().get(location).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body(equalTo(text));
+                .body("html.body.section.textarea", Matchers.containsString(text));
     }
 
     @Test
@@ -126,7 +137,7 @@ public class NoteControllerTest {
 
         given().get(location).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body(equalTo(text));
+                .body("html.body.section.textarea", Matchers.containsString(text));
     }
 
     @Test
@@ -144,7 +155,7 @@ public class NoteControllerTest {
 
         given().get(location).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body(equalTo(text));
+                .body("html.body.section.textarea", Matchers.containsString(text));
 
         given().get("http://" + body).then().assertThat()
                 .statusCode(HttpStatus.OK.value())

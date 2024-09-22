@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -37,11 +38,10 @@ public class AppControllerAdvice {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<String> handle(NoResourceFoundException e) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handle(NoResourceFoundException e) {
         log.debug("Static resource not found: {}", e.getResourcePath());
-        return ResponseEntity
-                .status(e.getStatusCode())
-                .body("404 not found");
+        return "not_found";
     }
 
     @ExceptionHandler(Exception.class)

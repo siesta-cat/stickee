@@ -35,3 +35,4 @@ build/
 ### Front ###
 node_modules/
 src/main/resources/static/main.css
+src/main/resources/static/bootstrap-icons/
