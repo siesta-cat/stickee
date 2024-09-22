@@ -13,6 +13,9 @@
         class="form-control font-monospace my-4"
         th:text="${noteText}"
       ></textarea>
+      <a th:href="@{|/${notesBasePath}/raw/${noteId}|}"
+        ><button class="btn btn-primary">Raw</button></a
+      >
     </section>
     <th:block th:replace="~{fragments :: footer}"></th:block>
   </body>

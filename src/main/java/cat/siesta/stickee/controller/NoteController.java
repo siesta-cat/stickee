@@ -32,7 +32,7 @@ public class NoteController {
     private StickeeConfig stickeeConfig;
     private NoteService noteService;
 
-    @GetMapping("/{id}")
+    @GetMapping({ "/{id}", "/raw/{id}" })
     public ResponseEntity<String> getNote(@PathVariable("id") String id) {
         log.debug("Received request for note with id: {}", id);
 
@@ -68,6 +68,6 @@ public class NoteController {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .header("Location", "/" + stickeeConfig.getBasePath() + "/detail/" + id)
-                .body(host + "/" + stickeeConfig.getBasePath() + "/" + id);
+                .body(host + "/" + stickeeConfig.getBasePath() + "/raw/" + id);
     }
 }

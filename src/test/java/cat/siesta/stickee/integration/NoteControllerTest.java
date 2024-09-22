@@ -73,6 +73,16 @@ public class NoteControllerTest {
     }
 
     @Test
+    void shouldGetFromRawPath() {
+        var noteHelloId = noteService.create(noteHello).getMaybeId().orElseThrow();
+
+        given().get(stickeeConfig.getBasePath() + "/raw/" + noteHelloId).then().assertThat()
+                .statusCode(HttpStatus.OK.value())
+                .body(equalTo("Hello world!"))
+                .contentType("text/plain");
+    }
+
+    @Test
     void shouldAlwaysReturnPlainText() {
         var noteHtmlId = noteService.create(noteHtml).getMaybeId().orElseThrow();
         var noteJsonId = noteService.create(noteJson).getMaybeId().orElseThrow();
