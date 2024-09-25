@@ -1,6 +1,7 @@
 package cat.siesta.stickee.config;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -19,4 +20,5 @@ public class StickeeConfig {
     private Long deletionDelay;
     private DataSize maxSize;
     private String dbEncryptionKey;
+    private List<Duration> expirationTimes;
 }

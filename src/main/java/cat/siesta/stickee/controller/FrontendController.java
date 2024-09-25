@@ -1,6 +1,8 @@
 package cat.siesta.stickee.controller;
 
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,12 @@ public class FrontendController {
 		model.addAttribute("notesBasePath", stickeeConfig.getBasePath());
 		model.addAttribute("notesMaxAge",
 				DurationFormatUtils.formatDurationWords(stickeeConfig.getMaxAge().toMillis(), true, true));
+		model.addAttribute("expirationTimes", stickeeConfig.getExpirationTimes().stream()
+				.collect(Collectors.toMap(
+						et -> et,
+						et -> DurationFormatUtils.formatDurationWords(et.toMillis(), true, true),
+						(existing, replacement) -> existing,
+						LinkedHashMap::new)));
 		model.addAttribute("version", version);
 		return "index";
 	}
