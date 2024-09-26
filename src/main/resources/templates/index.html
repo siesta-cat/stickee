@@ -22,14 +22,18 @@
           placeholder="Enter the note content here..."
           name="text"
           rows="5"
+          required
+          minlength="1"
         ></textarea>
         <div class="mb-3">
           <select
             id="expiration-time"
+            name="expirationTime"
             class="form-select w-50 mx-auto"
             aria-label="Expiration time"
+            required
           >
-            <option selected>Select expiration time</option>
+            <option selected value="">Select expiration time</option>
             <th:block th:each="expirationTime : ${expirationTimes}">
               <option
                 th:value="${expirationTime.key}"

@@ -1,7 +1,9 @@
 package cat.siesta.stickee.controller;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.CacheControl;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -55,16 +58,18 @@ public class NoteController {
     @PostMapping("/create")
     public ResponseEntity<String> postNote(
             @RequestHeader(HttpHeaders.HOST) String host,
-            @NotEmpty(message = "text cannot be empty") String text) {
+            @NotEmpty(message = "text cannot be empty") String text, @RequestParam Optional<Duration> expirationTime) {
         if (text.getBytes().length > stickeeConfig.getMaxSize().toBytes()) {
             throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE,
                     "the max size of a note is " + stickeeConfig.getMaxSize().toString());
         }
 
+        var expirationTimestamp = new NoteTimestamp(LocalDateTime.now()
+                .plus(expirationTime.orElse(stickeeConfig.getDefaultExpirationTime())));
+
         var id = noteService
                 .create(Note.builder().text(text)
-                        .expirationTimestamp(new NoteTimestamp(LocalDateTime.now()
-                                .plus(stickeeConfig.getDefaultExpirationTime())))
+                        .expirationTimestamp(expirationTimestamp)
                         .build())
                 .getMaybeId().orElseThrow();
 

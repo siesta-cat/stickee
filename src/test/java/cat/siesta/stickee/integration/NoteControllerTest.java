@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -196,5 +197,27 @@ public class NoteControllerTest {
                 .post(stickeeConfig.getBasePath() + "/create").then().assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(containsString("text cannot be empty"));
+    }
+
+    @Test
+    void shouldCreateNoteWithCustomTimestamp() {
+        var text = RandomStringUtils.insecure().next(10);
+
+        var expirationTime = Duration.ofHours(1);
+
+        var response = given()
+                .param("text", text)
+                .param("expirationTime", expirationTime.toString())
+                .post(stickeeConfig.getBasePath() + "/create").then().assertThat()
+                .statusCode(HttpStatus.FOUND.value())
+                .extract();
+
+        var location = response.header("Location");
+        var id = location.substring(location.lastIndexOf("/") + 1);
+
+        var note = noteService.get(id).get();
+
+        assertTrue(Duration.between(note.getCreationTimestamp().plus(expirationTime), note.getExpirationTimestamp())
+                .abs().compareTo(Duration.ofMinutes(1)) == -1);
     }
 }
