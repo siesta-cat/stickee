@@ -40,7 +40,7 @@ public class NoteController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "note not found"));
 
         var noteCreationDate = note.getCreationTimestamp();
-        var cacheMaxAge = Math.max(0, stickeeConfig.getMaxAge().toSeconds()
+        var cacheMaxAge = Math.max(0, stickeeConfig.getDefaultExpirationTime().toSeconds()
                 - ChronoUnit.SECONDS.between(noteCreationDate, LocalDateTime.now()));
         var cacheControl = CacheControl.maxAge(cacheMaxAge, TimeUnit.SECONDS).cachePublic().immutable();
 

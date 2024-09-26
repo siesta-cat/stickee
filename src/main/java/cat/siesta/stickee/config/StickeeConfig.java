@@ -16,7 +16,7 @@ import lombok.Data;
 @Data
 public class StickeeConfig {
     private String basePath;
-    private Duration maxAge;
+    private Duration defaultExpirationTime;
     private Long deletionDelay;
     private DataSize maxSize;
     private String dbEncryptionKey;

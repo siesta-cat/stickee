@@ -32,8 +32,9 @@ public class FrontendController {
 	@GetMapping("/")
 	public String home(Model model) {
 		model.addAttribute("notesBasePath", stickeeConfig.getBasePath());
-		model.addAttribute("notesMaxAge",
-				DurationFormatUtils.formatDurationWords(stickeeConfig.getMaxAge().toMillis(), true, true));
+		model.addAttribute("notesDefaultExpirationTime",
+				DurationFormatUtils.formatDurationWords(stickeeConfig.getDefaultExpirationTime().toMillis(), true,
+						true));
 		model.addAttribute("expirationTimes", stickeeConfig.getExpirationTimes().stream()
 				.collect(Collectors.toMap(
 						et -> et,
@@ -44,6 +45,7 @@ public class FrontendController {
 		return "index";
 	}
 
+	// TODO: make cached
 	@GetMapping("/${notes.base-path}/detail/{id}")
 	public String detail(@PathVariable("id") String id, Model model, HttpServletResponse response) {
 		return noteService.get(id).map(note -> {
@@ -51,7 +53,7 @@ public class FrontendController {
 			model.addAttribute("noteText", note.getText());
 			model.addAttribute("noteId", id);
 			model.addAttribute("expireTimestamp",
-					note.getCreationTimestamp().plus(stickeeConfig.getMaxAge())
+					note.getCreationTimestamp().plus(stickeeConfig.getDefaultExpirationTime())
 							.format(DateTimeFormatter.ofPattern("d MMM uuuu, HH:mm")));
 			return "detail";
 		}).orElseGet(() -> {
