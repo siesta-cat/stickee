@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.ToString;
 
 @Entity(name = "note")
@@ -24,6 +25,7 @@ import lombok.ToString;
 public class NoteEntity {
 
     @Id
+    @NonNull
     private String id;
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -31,6 +33,9 @@ public class NoteEntity {
 
     @Column(nullable = false)
     private LocalDateTime creationTimestamp;
+
+    @Column(nullable = true)
+    private LocalDateTime expirationTimestamp;
 
     // The "PLAIN" column default is to maintain compatibility with older versions
     // that use the plain encoding. It will be removed on a breaking changes update

@@ -23,6 +23,7 @@ import org.springframework.test.context.ActiveProfiles;
 import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.service.NoteService;
+import cat.siesta.stickee.utils.NoteStub;
 import groovy.util.logging.Slf4j;
 import io.restassured.RestAssured;
 import io.restassured.config.EncoderConfig;
@@ -34,10 +35,10 @@ import jakarta.annotation.PostConstruct;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = { "notes.max-size=1KB" })
 public class NoteControllerTest {
 
-    private Note noteHello = Note.builder().text("Hello world!").build();
-    private Note noteBye = Note.builder().text("Bye!").build();
-    private Note noteHtml = Note.builder().text("<b>Bold</b>").build();
-    private Note noteJson = Note.builder().text("{ \"text\": \"Hello\" }").build();
+    private Note noteHello = NoteStub.builder().text("Hello world!").build();
+    private Note noteBye = NoteStub.builder().text("Bye!").build();
+    private Note noteHtml = NoteStub.builder().text("<b>Bold</b>").build();
+    private Note noteJson = NoteStub.builder().text("{ \"text\": \"Hello\" }").build();
 
     @Autowired
     StickeeConfig stickeeConfig;

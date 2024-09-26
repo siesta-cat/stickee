@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
 
 @EqualsAndHashCode
@@ -13,7 +14,7 @@ import lombok.ToString;
 public class NoteTimestamp {
     private LocalDateTime timestamp;
 
-    public NoteTimestamp(LocalDateTime timestamp) {
+    public NoteTimestamp(@NonNull LocalDateTime timestamp) {
         this.timestamp = timestamp.truncatedTo(ChronoUnit.MILLIS);
     }
 }

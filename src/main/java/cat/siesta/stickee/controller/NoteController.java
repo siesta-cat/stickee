@@ -18,6 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.domain.Note;
+import cat.siesta.stickee.domain.NoteTimestamp;
 import cat.siesta.stickee.service.NoteService;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -60,7 +61,11 @@ public class NoteController {
                     "the max size of a note is " + stickeeConfig.getMaxSize().toString());
         }
 
-        var id = noteService.create(Note.builder().text(text).build())
+        var id = noteService
+                .create(Note.builder().text(text)
+                        .expirationTimestamp(new NoteTimestamp(LocalDateTime.now()
+                                .plus(stickeeConfig.getDefaultExpirationTime())))
+                        .build())
                 .getMaybeId().orElseThrow();
 
         log.info("Note created with id: {}", id);
