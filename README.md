@@ -15,7 +15,7 @@ As for now, the project has very basic features. Here's what's planned for futur
 - [ ] Choose when a note will be deleted
 - [ ] Self-destruct notes that are deleted from the database when opened
 - [ ] Password protected notes that allow _at-rest_ and _in-transit_ encrypted notes, to store sensitive information
-- [ ] Enhanced view with a fancy UI that shows details of the node, such as the time when the note will be deleted, syntax highlighting, etc.
+- [X] Enhanced view with a fancy UI that shows details of the node, such as the time when the note will be deleted, syntax highlighting, etc.
 
 ## Deploying with Docker compose
 
