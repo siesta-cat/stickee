@@ -23,7 +23,7 @@
       <a href="https://github.com/siesta-cat/stickee"
         ><p class="btn btn-primary m-0">Source code</p></a
       >
-      <p class="mx-2 my-auto v-100 text-light" th:text="${version}"></p>
+      <p class="mx-2 my-auto v-100 text-light" th:text="${@environment.getProperty('stickee.version')}"></p>
       <script th:src="@{/color-modes.js}"></script>
     </footer>
   </body>

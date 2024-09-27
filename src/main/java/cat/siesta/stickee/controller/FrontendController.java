@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,9 +25,6 @@ public class FrontendController {
 	@Autowired
 	NoteService noteService;
 
-	@Value("${stickee.version}")
-	private String version;
-
 	@GetMapping("/")
 	public String home(Model model) {
 		model.addAttribute("notesBasePath", stickeeConfig.getBasePath());
@@ -41,7 +37,6 @@ public class FrontendController {
 						et -> DurationFormatUtils.formatDurationWords(et.toMillis(), true, true),
 						(existing, replacement) -> existing,
 						LinkedHashMap::new)));
-		model.addAttribute("version", version);
 		return "index";
 	}
 
