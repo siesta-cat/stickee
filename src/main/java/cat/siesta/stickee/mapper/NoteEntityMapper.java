@@ -17,12 +17,12 @@ import cat.siesta.stickee.persistence.TextCipher;
 public class NoteEntityMapper {
 
     private TextEncryptor encryptor;
-    private Duration defaultExpirationTime;
+    private Duration maxExpirationTime;
 
     public NoteEntityMapper(TextEncryptor encryptor,
-            @Value("${notes.default-expiration-time}") Duration defaultExpirationTime) {
+            @Value("${notes.max-expiration-time}") Duration maxExpirationTime) {
         this.encryptor = encryptor;
-        this.defaultExpirationTime = defaultExpirationTime;
+        this.maxExpirationTime = maxExpirationTime;
     }
 
     public NoteEntity fromModel(Note note) {
@@ -39,7 +39,7 @@ public class NoteEntityMapper {
         };
         var expirationTimestamp = new NoteTimestamp(
                 entity.getExpirationTimestamp() != null ? entity.getExpirationTimestamp()
-                        : LocalDateTime.now().plus(defaultExpirationTime));
+                        : LocalDateTime.now().plus(maxExpirationTime));
         return new Note(Optional.ofNullable(NoteId.createWithoutValidation(entity.getId())), decryptedText,
                 new NoteTimestamp(entity.getCreationTimestamp()), expirationTimestamp);
     }

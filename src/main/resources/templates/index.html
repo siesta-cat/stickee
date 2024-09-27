@@ -10,7 +10,7 @@
       <p class="text-body-secondary text-center">
         You can create a note and get a link to share it. All notes are deleted
         after
-        <span class="text-primary" th:text="${notesDefaultExpirationTime}" />.
+        <span class="text-primary" th:text="${notesMaxExpirationTime}" />.
       </p>
       <form
         th:action="@{|/${notesBasePath}/create|}"

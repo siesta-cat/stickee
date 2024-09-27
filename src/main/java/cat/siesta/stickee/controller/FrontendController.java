@@ -32,8 +32,8 @@ public class FrontendController {
 	@GetMapping("/")
 	public String home(Model model) {
 		model.addAttribute("notesBasePath", stickeeConfig.getBasePath());
-		model.addAttribute("notesDefaultExpirationTime",
-				DurationFormatUtils.formatDurationWords(stickeeConfig.getDefaultExpirationTime().toMillis(), true,
+		model.addAttribute("notesMaxExpirationTime",
+				DurationFormatUtils.formatDurationWords(stickeeConfig.getMaxExpirationTime().toMillis(), true,
 						true));
 		model.addAttribute("expirationTimes", stickeeConfig.getExpirationTimes().stream()
 				.collect(Collectors.toMap(

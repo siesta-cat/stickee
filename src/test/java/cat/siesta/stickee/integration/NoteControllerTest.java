@@ -172,7 +172,7 @@ public class NoteControllerTest {
         var marginSeconds = 60;
 
         var noteId = noteService.create(noteHello).getMaybeId().orElseThrow();
-        var expectedCache = stickeeConfig.getDefaultExpirationTime().toSeconds();
+        var expectedCache = stickeeConfig.getMaxExpirationTime().toSeconds();
         Stream<String> validRange = IntStream.range(-marginSeconds, marginSeconds)
                 .mapToObj(margin -> "max-age=" + (expectedCache + margin) + ", public, immutable");
 
@@ -217,7 +217,30 @@ public class NoteControllerTest {
 
         var note = noteService.get(id).get();
 
-        assertTrue(Duration.between(note.getCreationTimestamp().plus(expirationTime), note.getExpirationTimestamp())
+        assertTrue(Duration
+                .between(note.getCreationTimestamp().plus(expirationTime),
+                        note.getExpirationTimestamp())
                 .abs().compareTo(Duration.ofMinutes(1)) == -1);
+    }
+
+    @Test
+    void shouldReturnBadRequestWithTooBigExpiration() {
+        var text = RandomStringUtils.insecure().next(10);
+
+        given().param("text", text)
+                .param("expirationTime", stickeeConfig.getMaxExpirationTime().plusDays(1).toString())
+                .post(stickeeConfig.getBasePath() + "/create").then().assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldReturnBadRequestWithInvalidExpiration() {
+        var text = RandomStringUtils.insecure().next(10);
+        var invalidExpiration = "invalid";
+
+        given().param("text", text)
+                .param("expirationTime", invalidExpiration)
+                .post(stickeeConfig.getBasePath() + "/create").then().assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }
