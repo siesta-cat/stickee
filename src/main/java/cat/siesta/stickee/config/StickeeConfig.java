@@ -1,6 +1,7 @@
 package cat.siesta.stickee.config;
 
 import java.time.Duration;
+import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +16,9 @@ import lombok.Data;
 @Data
 public class StickeeConfig {
     private String basePath;
-    private Duration maxAge;
+    private Duration maxExpirationTime;
     private Long deletionDelay;
     private DataSize maxSize;
     private String dbEncryptionKey;
+    private List<Duration> expirationTimes;
 }

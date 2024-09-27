@@ -16,7 +16,8 @@ public class NoteTest {
     @Test
     void shouldCreateSameNoteWithGivenId() {
         var noteId = NoteId.generate();
-        var note = new Note(Optional.empty(), "text", new NoteTimestamp(LocalDateTime.now()));
+        var note = new Note(Optional.empty(), "text", new NoteTimestamp(LocalDateTime.now()),
+                new NoteTimestamp(LocalDateTime.now().plusDays(7)));
         var noteWithId = note.withId(noteId);
 
         assertEquals(note.getText(), note.getText());

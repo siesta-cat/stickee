@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.ToString;
 import lombok.With;
 
@@ -25,17 +26,26 @@ public class Note {
     private Optional<NoteId> maybeId = Optional.empty();
 
     @NotEmpty(message = "text cannot be empty")
+    @NonNull
     private String text;
 
     @Default
     private NoteTimestamp creationTimestamp = new NoteTimestamp(LocalDateTime.now());
 
+    @NonNull
+    private NoteTimestamp expirationTimestamp;
+
     public Note withId(NoteId id) {
         return this.withMaybeId(Optional.of(id));
     }
 
+    // TODO: refactor? do we need these custom getters?
     public LocalDateTime getCreationTimestamp() {
         return creationTimestamp.getTimestamp();
+    }
+
+    public LocalDateTime getExpirationTimestamp() {
+        return expirationTimestamp.getTimestamp();
     }
 
 }

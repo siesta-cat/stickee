@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import cat.siesta.stickee.config.StickeeConfig;
-import cat.siesta.stickee.domain.NoteTimestamp;
+import cat.siesta.stickee.domain.NoteId;
+import cat.siesta.stickee.persistence.NoteEntity;
+import cat.siesta.stickee.persistence.NoteRepository;
+import cat.siesta.stickee.persistence.TextCipher;
 import cat.siesta.stickee.service.NoteDeletionService;
 import cat.siesta.stickee.service.NoteService;
-import cat.siesta.stickee.utils.NoteStub;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -31,33 +32,44 @@ public class NoteDeletionServiceTest {
     @Autowired
     private NoteService noteService;
 
+    @Autowired
+    private NoteRepository noteRepository;
+
     @Test
     void shouldDeleteExpiredNotes() {
-        var expiredDate = LocalDateTime.now().minus(stickeeConfig.getMaxAge());
-        var notes = List.of(
-                NoteStub.builder().build(),
-                NoteStub.builder().creationTimestamp(new NoteTimestamp(expiredDate.minusHours(1)))
-                        .build(),
-                NoteStub.builder().creationTimestamp(new NoteTimestamp(expiredDate.minusDays(3)))
-                        .build());
+        var minimumExpiredDate = LocalDateTime.now().minus(stickeeConfig.getMaxExpirationTime());
+        var noteEntities = List.of(
+                new NoteEntity(NoteId.generate().getId(), "text", minimumExpiredDate.minusHours(1), null,
+                        TextCipher.PLAIN),
+                new NoteEntity(NoteId.generate().getId(), "text", LocalDateTime.now(), null, TextCipher.PLAIN),
+                new NoteEntity(NoteId.generate().getId(), "text", LocalDateTime.now().minusDays(1),
+                        LocalDateTime.now().minusHours(1), TextCipher.PLAIN),
+                new NoteEntity(NoteId.generate().getId(), "text", LocalDateTime.now().minusDays(1),
+                        LocalDateTime.now().plusHours(1), TextCipher.PLAIN));
 
-        var insertedNotes = notes.stream()
-                .map(note -> noteService.create(note))
-                .collect(Collectors.toList());
+        var insertedNotes = noteEntities.stream()
+                .map(note -> noteRepository.save(note))
+                .toList();
 
         var expectedExpiredNotes = insertedNotes.stream()
-                .filter(note -> note.getCreationTimestamp().isBefore(expiredDate));
+                .filter(note -> note.getExpirationTimestamp() == null
+                        ? note.getCreationTimestamp().isBefore(minimumExpiredDate)
+                        : LocalDateTime.now().isAfter(note.getExpirationTimestamp()))
+                .toList();
 
         var expectedFreshNotes = insertedNotes.stream()
-                .filter(note -> !note.getCreationTimestamp().isBefore(expiredDate));
+                .filter(note -> note.getExpirationTimestamp() == null
+                        ? !note.getCreationTimestamp().isBefore(minimumExpiredDate)
+                        : note.getExpirationTimestamp().isAfter(LocalDateTime.now()))
+                .toList();
 
         var deletedEntities = noteDeletionService.deleteExpiredNotes();
 
-        assertEquals(2, deletedEntities);
-        assertTrue(expectedExpiredNotes
-                .allMatch(note -> noteService.get(note.getMaybeId().get().getId()).isEmpty()));
-        assertTrue(expectedFreshNotes
-                .allMatch(note -> noteService.get(note.getMaybeId().get().getId()).isPresent()));
+        assertEquals(expectedExpiredNotes.size(), deletedEntities);
+        assertTrue(expectedExpiredNotes.stream()
+                .allMatch(note -> noteService.get(note.getId()).isEmpty()));
+        assertTrue(expectedFreshNotes.stream()
+                .allMatch(note -> noteService.get(note.getId()).isPresent()));
     }
 
 }

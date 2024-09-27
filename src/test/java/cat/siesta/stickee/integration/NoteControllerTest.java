@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.util.UUID;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -23,6 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 import cat.siesta.stickee.config.StickeeConfig;
 import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.service.NoteService;
+import cat.siesta.stickee.utils.NoteStub;
 import groovy.util.logging.Slf4j;
 import io.restassured.RestAssured;
 import io.restassured.config.EncoderConfig;
@@ -34,10 +36,10 @@ import jakarta.annotation.PostConstruct;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = { "notes.max-size=1KB" })
 public class NoteControllerTest {
 
-    private Note noteHello = Note.builder().text("Hello world!").build();
-    private Note noteBye = Note.builder().text("Bye!").build();
-    private Note noteHtml = Note.builder().text("<b>Bold</b>").build();
-    private Note noteJson = Note.builder().text("{ \"text\": \"Hello\" }").build();
+    private Note noteHello = NoteStub.builder().text("Hello world!").build();
+    private Note noteBye = NoteStub.builder().text("Bye!").build();
+    private Note noteHtml = NoteStub.builder().text("<b>Bold</b>").build();
+    private Note noteJson = NoteStub.builder().text("{ \"text\": \"Hello\" }").build();
 
     @Autowired
     StickeeConfig stickeeConfig;
@@ -170,7 +172,7 @@ public class NoteControllerTest {
         var marginSeconds = 60;
 
         var noteId = noteService.create(noteHello).getMaybeId().orElseThrow();
-        var expectedCache = stickeeConfig.getMaxAge().toSeconds();
+        var expectedCache = stickeeConfig.getMaxExpirationTime().toSeconds();
         Stream<String> validRange = IntStream.range(-marginSeconds, marginSeconds)
                 .mapToObj(margin -> "max-age=" + (expectedCache + margin) + ", public, immutable");
 
@@ -195,5 +197,50 @@ public class NoteControllerTest {
                 .post(stickeeConfig.getBasePath() + "/create").then().assertThat()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .body(containsString("text cannot be empty"));
+    }
+
+    @Test
+    void shouldCreateNoteWithCustomTimestamp() {
+        var text = RandomStringUtils.insecure().next(10);
+
+        var expirationTime = Duration.ofHours(1);
+
+        var response = given()
+                .param("text", text)
+                .param("expirationTime", expirationTime.toString())
+                .post(stickeeConfig.getBasePath() + "/create").then().assertThat()
+                .statusCode(HttpStatus.FOUND.value())
+                .extract();
+
+        var location = response.header("Location");
+        var id = location.substring(location.lastIndexOf("/") + 1);
+
+        var note = noteService.get(id).get();
+
+        assertTrue(Duration
+                .between(note.getCreationTimestamp().plus(expirationTime),
+                        note.getExpirationTimestamp())
+                .abs().compareTo(Duration.ofMinutes(1)) == -1);
+    }
+
+    @Test
+    void shouldReturnBadRequestWithTooBigExpiration() {
+        var text = RandomStringUtils.insecure().next(10);
+
+        given().param("text", text)
+                .param("expirationTime", stickeeConfig.getMaxExpirationTime().plusDays(1).toString())
+                .post(stickeeConfig.getBasePath() + "/create").then().assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    void shouldReturnBadRequestWithInvalidExpiration() {
+        var text = RandomStringUtils.insecure().next(10);
+        var invalidExpiration = "invalid";
+
+        given().param("text", text)
+                .param("expirationTime", invalidExpiration)
+                .post(stickeeConfig.getBasePath() + "/create").then().assertThat()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 }

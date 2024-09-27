@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface NoteRepository extends JpaRepository<NoteEntity, String> {
 
     public long deleteAllByCreationTimestampBefore(LocalDateTime timestamp);
+
+    public long deleteAllByExpirationTimestampBefore(LocalDateTime timestamp);
 }

@@ -3,25 +3,46 @@
   <head th:replace="~{fragments :: head}"></head>
   <body class="min-vh-100 d-flex flex-column">
     <th:block th:replace="~{fragments :: header}"></th:block>
-    <section class="container flex-fill text-center">
-      <p class="fs-2 fw-light m-5">
+    <section class="container flex-fill">
+      <p class="fs-2 fw-light mt-5 text-center">
         A simple and ephemeral text storage application
       </p>
-      <p class="m-4 text-body-secondary">
+      <p class="text-body-secondary text-center">
         You can create a note and get a link to share it. All notes are deleted
-        after <span class="text-primary" th:text="${notesMaxAge}" />.
+        after
+        <span class="text-primary" th:text="${notesMaxExpirationTime}" />.
       </p>
       <form
-        class="text-center"
         th:action="@{|/${notesBasePath}/create|}"
         method="post"
+        class="my-5 text-center"
       >
         <textarea
-          class="font-monospace form-control"
+          class="font-monospace form-control mb-3"
+          placeholder="Enter the note content here..."
           name="text"
           rows="5"
+          required
+          minlength="1"
         ></textarea>
-        <button class="m-4 btn btn-primary" type="submit">Submit</button>
+        <div class="mb-3">
+          <select
+            id="expiration-time"
+            name="expirationTime"
+            class="form-select w-50 mx-auto"
+            aria-label="Expiration time"
+            required
+          >
+            <option selected value="">Select expiration time</option>
+            <th:block th:each="expirationTime : ${expirationTimes}">
+              <option
+                th:value="${expirationTime.key}"
+                th:text="${expirationTime.value}"
+              ></option>
+            </th:block>
+          </select>
+        </div>
+        <button class="btn btn-primary mx-auto" type="submit">Submit</button>
       </form>
     </section>
     <th:block th:replace="~{fragments :: footer}"></th:block>
