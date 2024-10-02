@@ -39,7 +39,6 @@ public class Note {
         return this.withMaybeId(Optional.of(id));
     }
 
-    // TODO: refactor? do we need these custom getters?
     public LocalDateTime getCreationTimestamp() {
         return creationTimestamp.getTimestamp();
     }
