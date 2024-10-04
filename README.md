@@ -14,9 +14,8 @@ You use our **hosted Stickee instance** [here](https://stickee.siesta.cat), or d
 As for now, the project has very basic features. Here's what's planned for future releases:
 
 - [x] Choose when a note will be deleted
-- [ ] Self-destruct notes that are deleted from the database when opened
-- [ ] Password protected notes that allow _at-rest_ and _in-transit_ encrypted notes, to store sensitive information
-- [x] Enhanced view with a fancy UI that shows details of the node, such as the time when the note will be deleted, syntax highlighting, etc.
+- [ ] Allow note deletion
+- [x] Enhanced view with a fancy UI that shows details of the node, such as the time when the note will be deleted
 
 ## Deploying with Docker compose
 
