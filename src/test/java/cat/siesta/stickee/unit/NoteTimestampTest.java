@@ -3,7 +3,7 @@ package cat.siesta.stickee.unit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ public class NoteTimestampTest {
 
     @Test
     void shouldIgnoreNanosOnEquals() {
-        var dt = LocalDateTime.now();
+        var dt = Instant.now();
         var t1 = new NoteTimestamp(dt);
         var t2 = new NoteTimestamp(dt.truncatedTo(ChronoUnit.MILLIS));
 
@@ -23,7 +23,7 @@ public class NoteTimestampTest {
 
     @Test
     void shouldNotIgnoreMillisOnEquals() {
-        var dt = LocalDateTime.now();
+        var dt = Instant.now();
         var t1 = new NoteTimestamp(dt);
         var t2 = new NoteTimestamp(dt.minus(1, ChronoUnit.MILLIS));
 

@@ -1,6 +1,6 @@
 package cat.siesta.stickee.service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,11 +23,11 @@ public class NoteDeletionService {
     @Scheduled(fixedDelayString = "${notes.deletion-delay}", timeUnit = TimeUnit.SECONDS)
     @Transactional
     public long deleteExpiredNotes() {
-        var minimumExpiredDate = LocalDateTime.now().minus(stickeeConfig.getMaxExpirationTime());
+        var minimumExpiredDate = Instant.now().minus(stickeeConfig.getMaxExpirationTime());
 
         var deletedNotesByCreationTimestamp = noteRepository.deleteAllByCreationTimestampBefore(minimumExpiredDate);
         var deletedNotesByExpirationTimestamp = noteRepository
-                .deleteAllByExpirationTimestampBefore(LocalDateTime.now());
+                .deleteAllByExpirationTimestampBefore(Instant.now());
         var deletedNotesCount = deletedNotesByCreationTimestamp + deletedNotesByExpirationTimestamp;
 
         if (deletedNotesCount > 0L) {

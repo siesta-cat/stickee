@@ -1,7 +1,7 @@
 package cat.siesta.stickee.controller;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +46,7 @@ public class NoteController {
 
         var noteCreationDate = note.getCreationTimestamp();
         var cacheMaxAge = Math.max(0, stickeeConfig.getMaxExpirationTime().toSeconds()
-                - ChronoUnit.SECONDS.between(noteCreationDate, LocalDateTime.now()));
+                - ChronoUnit.SECONDS.between(noteCreationDate, Instant.now()));
         var cacheControl = CacheControl.maxAge(cacheMaxAge, TimeUnit.SECONDS).cachePublic().immutable();
 
         return ResponseEntity
@@ -75,7 +75,7 @@ public class NoteController {
                                     true, true));
         }
 
-        var expirationTimestamp = new NoteTimestamp(LocalDateTime.now()
+        var expirationTimestamp = new NoteTimestamp(Instant.now()
                 .plus(expirationTime.orElse(stickeeConfig.getMaxExpirationTime())));
 
         var id = noteService

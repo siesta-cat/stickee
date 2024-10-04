@@ -1,6 +1,6 @@
 package cat.siesta.stickee.domain;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -30,7 +30,7 @@ public class Note {
     private String text;
 
     @Default
-    private NoteTimestamp creationTimestamp = new NoteTimestamp(LocalDateTime.now());
+    private NoteTimestamp creationTimestamp = new NoteTimestamp(Instant.now());
 
     @NonNull
     private NoteTimestamp expirationTimestamp;
@@ -39,11 +39,11 @@ public class Note {
         return this.withMaybeId(Optional.of(id));
     }
 
-    public LocalDateTime getCreationTimestamp() {
+    public Instant getCreationTimestamp() {
         return creationTimestamp.getTimestamp();
     }
 
-    public LocalDateTime getExpirationTimestamp() {
+    public Instant getExpirationTimestamp() {
         return expirationTimestamp.getTimestamp();
     }
 

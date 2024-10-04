@@ -1,7 +1,7 @@
 package cat.siesta.stickee.mapper;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -39,7 +39,7 @@ public class NoteEntityMapper {
         };
         var expirationTimestamp = new NoteTimestamp(
                 entity.getExpirationTimestamp() != null ? entity.getExpirationTimestamp()
-                        : LocalDateTime.now().plus(maxExpirationTime));
+                        : Instant.now().plus(maxExpirationTime));
         return new Note(Optional.ofNullable(NoteId.createWithoutValidation(entity.getId())), decryptedText,
                 new NoteTimestamp(entity.getCreationTimestamp()), expirationTimestamp);
     }

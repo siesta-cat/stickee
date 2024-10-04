@@ -1,6 +1,5 @@
 package cat.siesta.stickee.controller;
 
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 
@@ -48,7 +47,7 @@ public class FrontendController {
 			model.addAttribute("noteText", note.getText());
 			model.addAttribute("noteId", id);
 			model.addAttribute("noteExpirationTimestamp",
-					note.getExpirationTimestamp().format(DateTimeFormatter.ofPattern("d MMM uuuu, HH:mm")));
+					note.getExpirationTimestamp());
 			return "detail";
 		}).orElseGet(() -> {
 			response.setStatus(HttpStatus.NOT_FOUND.value());

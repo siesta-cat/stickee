@@ -1,6 +1,6 @@
 package cat.siesta.stickee.domain;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import lombok.EqualsAndHashCode;
@@ -12,9 +12,9 @@ import lombok.ToString;
 @ToString
 @Getter
 public class NoteTimestamp {
-    private LocalDateTime timestamp;
+    private Instant timestamp;
 
-    public NoteTimestamp(@NonNull LocalDateTime timestamp) {
+    public NoteTimestamp(@NonNull Instant timestamp) {
         this.timestamp = timestamp.truncatedTo(ChronoUnit.MILLIS);
     }
 }

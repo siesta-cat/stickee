@@ -3,7 +3,8 @@ package cat.siesta.stickee.integration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.Instant;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class BackwardCompatibilityTest {
     @Test
     void shouldGetAlreadyExistingNoteWithInvalidId() {
         var invalidId = "invalidId";
-        var entity = new NoteEntity(invalidId, "text", LocalDateTime.now(), LocalDateTime.now().plusDays(7),
+        var entity = new NoteEntity(invalidId, "text", Instant.now(), Instant.now().plus(Duration.ofDays(7)),
                 TextCipher.PLAIN);
 
         noteRepository.save(entity);
@@ -44,7 +45,7 @@ public class BackwardCompatibilityTest {
     @Test
     void shouldGetNoteWithNullExpirationTimestamp() {
         var id = NoteId.generate().getId();
-        var entity = new NoteEntity(id, "text", LocalDateTime.now(), null,
+        var entity = new NoteEntity(id, "text", Instant.now(), null,
                 TextCipher.PLAIN);
 
         noteRepository.save(entity);

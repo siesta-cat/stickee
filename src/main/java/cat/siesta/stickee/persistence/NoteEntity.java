@@ -1,6 +1,6 @@
 package cat.siesta.stickee.persistence;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -32,10 +32,10 @@ public class NoteEntity {
     private String text;
 
     @Column(nullable = false)
-    private LocalDateTime creationTimestamp;
+    private Instant creationTimestamp;
 
     @Column(nullable = true)
-    private LocalDateTime expirationTimestamp;
+    private Instant expirationTimestamp;
 
     // The "PLAIN" column default is to maintain compatibility with older versions
     // that use the plain encoding. It will be removed on a breaking changes update

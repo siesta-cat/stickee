@@ -2,7 +2,8 @@ package cat.siesta.stickee.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,8 @@ public class NoteTest {
     @Test
     void shouldCreateSameNoteWithGivenId() {
         var noteId = NoteId.generate();
-        var note = new Note(Optional.empty(), "text", new NoteTimestamp(LocalDateTime.now()),
-                new NoteTimestamp(LocalDateTime.now().plusDays(7)));
+        var note = new Note(Optional.empty(), "text", new NoteTimestamp(Instant.now()),
+                new NoteTimestamp(Instant.now().plus(Duration.ofDays(7))));
         var noteWithId = note.withId(noteId);
 
         assertEquals(note.getText(), note.getText());
