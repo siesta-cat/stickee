@@ -20,7 +20,7 @@ import jakarta.annotation.PostConstruct;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ControlerAdviceTest {
+public class ControllerAdviceTest {
 
     @Autowired
     StickeeConfig stickeeConfig;
