@@ -10,7 +10,6 @@
       <p class="text-body-secondary text-center">
         You can create a note and get a link to share it. You decide when to
         delete it.
-        <span class="text-primary" th:text="${notesMaxExpirationTime}" />.
       </p>
       <form
         th:action="@{|/${notesBasePath}/create|}"
@@ -19,7 +18,7 @@
       >
         <textarea
           class="font-monospace form-control mb-3"
-          placeholder="Enter the note content here..."
+          placeholder="Enter the note contents here..."
           name="text"
           rows="5"
           required
