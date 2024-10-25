@@ -14,6 +14,8 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -22,7 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 
 import cat.siesta.stickee.config.StickeeConfig;
-import cat.siesta.stickee.domain.Note;
 import cat.siesta.stickee.service.NoteService;
 import cat.siesta.stickee.utils.NoteStub;
 import groovy.util.logging.Slf4j;
@@ -35,11 +36,6 @@ import jakarta.annotation.PostConstruct;
 @Slf4j
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = { "notes.max-size=1KB" })
 public class NoteControllerTest {
-
-    private Note noteHello = NoteStub.builder().text("Hello world!").build();
-    private Note noteBye = NoteStub.builder().text("Bye!").build();
-    private Note noteHtml = NoteStub.builder().text("<b>Bold</b>").build();
-    private Note noteJson = NoteStub.builder().text("{ \"text\": \"Hello\" }").build();
 
     @Autowired
     StickeeConfig stickeeConfig;
@@ -60,46 +56,41 @@ public class NoteControllerTest {
 
     @Test
     void shouldGetWhenExisting() {
-        var noteHelloId = noteService.create(noteHello).getMaybeId().orElseThrow();
-        var noteByeId = noteService.create(noteBye).getMaybeId().orElseThrow();
+        var note = NoteStub.builder().build();
+        var noteId = noteService.create(note).getMaybeId().orElseThrow();
 
-        given().get(stickeeConfig.getBasePath() + "/" + noteHelloId).then().assertThat()
+        given().get(stickeeConfig.getBasePath() + "/" + noteId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body(equalTo("Hello world!"))
-                .contentType("text/plain");
-
-        given().get(stickeeConfig.getBasePath() + "/" + noteByeId).then().assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .body(equalTo("Bye!"))
+                .body(equalTo(note.getText()))
                 .contentType("text/plain");
     }
 
     @Test
     void shouldGetFromRawPath() {
-        var noteHelloId = noteService.create(noteHello).getMaybeId().orElseThrow();
+        var note = NoteStub.builder().build();
+        var noteId = noteService.create(note).getMaybeId().orElseThrow();
 
-        given().get(stickeeConfig.getBasePath() + "/raw/" + noteHelloId).then().assertThat()
+        given().get(stickeeConfig.getBasePath() + "/raw/" + noteId).then().assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .body(equalTo("Hello world!"))
+                .body(equalTo(note.getText()))
                 .contentType("text/plain");
     }
 
-    @Test
-    void shouldAlwaysReturnPlainText() {
-        var noteHtmlId = noteService.create(noteHtml).getMaybeId().orElseThrow();
-        var noteJsonId = noteService.create(noteJson).getMaybeId().orElseThrow();
+    @ParameterizedTest
+    @CsvSource({
+            "text/html,<b>Bold</b>",
+            "application/json,{ \"text\": \"Hello\" }"
+    })
+    void contentTypeIsAlwaysPlainTextRegardlessOfAcceptHeader(String acceptedContentType, String text) {
+        var note = NoteStub.builder().text(text).build();
+        var noteId = noteService.create(note).getMaybeId().orElseThrow();
 
-        given().header("Accept", "text/html")
-                .given().get(stickeeConfig.getBasePath() + "/" + noteHtmlId).then()
+        given().header("Accept", acceptedContentType)
+                .given().get(stickeeConfig.getBasePath() + "/" + noteId).then()
                 .assertThat()
                 .statusCode(HttpStatus.OK.value())
-                .contentType("text/plain");
-
-        given().header("Accept", "application/json")
-                .given().get(stickeeConfig.getBasePath() + "/" + noteJsonId).then()
-                .assertThat()
-                .statusCode(HttpStatus.OK.value())
-                .contentType("text/plain");
+                .contentType("text/plain")
+                .body(equalTo(text));
     }
 
     @Test
@@ -170,7 +161,8 @@ public class NoteControllerTest {
     void shouldContainCacheHeadersOnGet() {
         var marginSeconds = 60;
 
-        var noteId = noteService.create(noteHello).getMaybeId().orElseThrow();
+        var note = NoteStub.builder().build();
+        var noteId = noteService.create(note).getMaybeId().orElseThrow();
         var expectedCache = stickeeConfig.getMaxExpirationTime().toSeconds();
         Stream<String> validRange = IntStream.range(-marginSeconds, marginSeconds)
                 .mapToObj(margin -> "max-age=" + (expectedCache + margin) + ", public, immutable");

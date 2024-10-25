@@ -11,6 +11,9 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import cat.siesta.stickee.domain.NoteId;
 
@@ -35,14 +38,19 @@ public class NoteIdTest {
         ids.forEach(id -> assertTrue(StringUtils.isNotEmpty(StringUtils.getDigits(id.getId()))));
     }
 
+    @ParameterizedTest
+    @NullAndEmptySource
+    @MethodSource("generateRandomInvalidIds")
+    void shouldExceptOnInvalidId(String invalidId) {
+        assertThrows(IllegalArgumentException.class,
+                () -> new NoteId(invalidId));
+    }
+
     @Test
-    void shouldExceptOnInvalidId() {
-        assertThrows(IllegalArgumentException.class,
-                () -> new NoteId(RandomStringUtils.insecure().nextAlphabetic(NoteId.ID_LENGTH)));
-        assertThrows(IllegalArgumentException.class, () -> new NoteId(""));
-        assertThrows(IllegalArgumentException.class,
-                () -> new NoteId(RandomStringUtils.insecure().next(NoteId.ID_LENGTH, "€áñ")));
-        assertDoesNotThrow(() -> new NoteId(RandomStringUtils.insecure().nextAlphanumeric(NoteId.ID_LENGTH - 1) + "1"));
+    void shouldNotExceptOnValidId() {
+        var alphanumericStringWithAtLeastOneNumber = RandomStringUtils.insecure().nextAlphanumeric(NoteId.ID_LENGTH - 1)
+                + "1";
+        assertDoesNotThrow(() -> new NoteId(alphanumericStringWithAtLeastOneNumber));
     }
 
     @Test
@@ -51,4 +59,10 @@ public class NoteIdTest {
         assertEquals(id.toString(), id.getId());
     }
 
+    public static Stream<String> generateRandomInvalidIds() {
+        var idWithoutAnyNumber = RandomStringUtils.insecure().nextAlphabetic(NoteId.ID_LENGTH);
+        var idWithInvalidCharacters = RandomStringUtils.insecure().next(NoteId.ID_LENGTH, "€áñ");
+
+        return Stream.of(idWithoutAnyNumber, idWithInvalidCharacters);
+    }
 }
