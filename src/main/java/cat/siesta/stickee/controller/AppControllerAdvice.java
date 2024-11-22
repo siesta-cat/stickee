@@ -25,7 +25,7 @@ public class AppControllerAdvice {
 
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<String> handle(HandlerMethodValidationException e) {
-        var message = e.getAllValidationResults().get(0).getResolvableErrors().get(0).getDefaultMessage();
+        var message = e.getParameterValidationResults().get(0).getResolvableErrors().get(0).getDefaultMessage();
 
         log.debug("Validation error {}: {}",
                 e.getStatusCode(),
