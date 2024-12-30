@@ -11,10 +11,10 @@ jobs:
       tag: ${{ steps.tag_version.outputs.new_tag }}
     steps:
       - name: 🔽 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: ⏫ Bump version and push tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@v6.2
+        uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b # v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
   ci:
@@ -24,13 +24,13 @@ jobs:
 
     steps:
       - name: 🔽 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       - name: Set version on project
         run: |
           sed -i 's/version=.*/version=${{ needs.tag.outputs.tag }}/g' src/main/resources/stickee.properties
       - name: 🔧 Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96 # v5
         with:
           # list of Docker images to use as base name for tags
           images: ghcr.io/siesta-cat/stickee
@@ -46,17 +46,17 @@ jobs:
         run: |
           docker context create builders
       - name: 🔧 Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5 # v3
         with:
           endpoint: builders
       - name: 🪵 Login to docker registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: 🏗️ Build and Push ⏫
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@48aba3b46d1b1fec4febb7c5d0c644b249a11355 # v6
         with:
           platforms: linux/amd64,linux/arm64
           context: .
