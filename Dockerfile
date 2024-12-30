@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk AS base
+FROM eclipse-temurin:21.0.5_11-jdk AS base
 WORKDIR /build
 COPY --chmod=755 mvnw mvnw
 COPY .mvn/ .mvn/
@@ -17,7 +17,7 @@ RUN --mount=type=bind,source=pom.xml,target=pom.xml \
     ./mvnw package -DskipTests && \
     mv target/$(./mvnw help:evaluate -Dexpression=project.artifactId -q -DforceStdout)-$(./mvnw help:evaluate -Dexpression=project.version -q -DforceStdout).jar target/app.jar
 
-FROM eclipse-temurin:21-jre AS final
+FROM eclipse-temurin:21.0.5_11-jre AS final
 WORKDIR /app
 RUN useradd \
     --no-create-home \
