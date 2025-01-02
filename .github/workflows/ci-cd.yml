@@ -1,4 +1,8 @@
 name: CI/CD
+permissions:
+  contents: write
+  actions: write
+  packages: write
 
 on:
   workflow_dispatch:
