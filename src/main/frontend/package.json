@@ -3,7 +3,7 @@
     "build": "sass styles.scss ../resources/static/main.css --no-source-map --style compressed --quiet"
   },
   "dependencies": {
-    "bootstrap": "5.3.3",
+    "bootstrap": "5.3.4",
     "bootstrap-icons": "1.11.3",
     "sass": "1.86.2"
   }
