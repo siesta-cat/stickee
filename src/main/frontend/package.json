@@ -4,7 +4,7 @@
   },
   "dependencies": {
     "bootstrap": "5.3.6",
-    "bootstrap-icons": "1.12.1",
+    "bootstrap-icons": "1.13.1",
     "sass": "1.87.0"
   }
 }
